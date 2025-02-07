@@ -6,3 +6,86 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  password     String
+  role         Role
+  managerId    String?  
+  manager      User?    @relation("UserHierarchy", fields: [managerId], references: [id])
+  subordinates User[]   @relation("UserHierarchy") 
+  visits       Visit[]
+  createdAt    DateTime @default(now())
+}
+
+model Partner {
+  id        String   @id @default(uuid())
+  name      String
+  latitude  Float
+  longitude Float
+  contact   String?
+  visits    Visit[]
+  createdAt DateTime @default(now())
+}
+
+model Visit {
+  id            String   @id @default(uuid())
+  coordinatorId String
+  coordinator   User     @relation(fields: [coordinatorId], references: [id])
+  partnerId     String
+  partner       Partner  @relation(fields: [partnerId], references: [id])
+  visitDate     DateTime
+  status        VisitStatus
+
+  issues        Issue[]  
+  photos        Photo[]
+  checkInDate   DateTime? 
+  checkOutDate  DateTime? 
+  createdAt     DateTime @default(now())
+  report        Report[]
+}
+
+model Issue {
+  id          String       @id @default(uuid())
+  visitId     String
+  visit       Visit        @relation(fields: [visitId], references: [id])
+  description String      
+  status      IssueStatus  
+  createdAt   DateTime @default(now()) 
+}
+
+enum IssueStatus {
+  SOLVED
+  NOT_SOLVED
+}
+
+model Photo {
+  id      String @id @default(uuid())
+  visitId String
+  visit   Visit  @relation(fields: [visitId], references: [id])
+  url     String
+}
+
+model Report {
+  id        String   @id @default(uuid())
+  visitId   String
+  visit     Visit    @relation(fields: [visitId], references: [id])
+  content   String   
+  createdAt DateTime @default(now()) 
+}
+
+enum Role {
+  ADMIN
+  DIRECTOR
+  IDC_MANAGER
+  POS_COORDINATOR
+}
+
+enum VisitStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
