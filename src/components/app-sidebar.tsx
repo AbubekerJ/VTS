@@ -18,8 +18,8 @@ import SidebarLogo from "./sidebar-logo";
 // This is sample data.
 const userRole = "idc-manager";
 const rolePermissions = {
-  "pos-cordinator": ["Visits"],
-  "idc-manager": ["Dashboard", "Pos-Cordinators"],
+  "pos-coordinator": ["Visits"],
+  "idc-manager": ["Dashboard", "Pos-Coordinators"],
 };
 
 // Full data
@@ -61,7 +61,7 @@ const data = {
       icon: Bot,
     },
     {
-      title: "Pos-Cordinators",
+      title: "Pos-Coordinators",
       url: "#",
       icon: UsersRound,
     },
