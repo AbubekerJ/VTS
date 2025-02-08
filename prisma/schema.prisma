@@ -1,3 +1,5 @@
+
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,10 +16,37 @@ model User {
   password     String
   role         Role
   managerId    String?  
-  manager      User?    @relation("UserHierarchy", fields: [managerId], references: [id])
-  subordinates User[]   @relation("UserHierarchy") 
-  visits       Visit[]
+  manager      User?     @relation("UserHierarchy", fields: [managerId], references: [id])
+  subordinates User[]    @relation("UserHierarchy")  
+
+  visitsAsCoordinator Visit[] @relation("CoordinatorVisits")
+  visitsScheduled     Visit[] @relation("ScheduledVisits")
+
   createdAt    DateTime @default(now())
+}
+
+
+
+
+model Visit {
+  id            String   @id @default(uuid())
+  coordinatorId String
+  coordinator   User     @relation(name: "CoordinatorVisits", fields: [coordinatorId], references: [id])
+  
+  scheduledById String
+  scheduledBy   User     @relation(name: "ScheduledVisits", fields: [scheduledById], references: [id])
+
+  partnerId     String
+  partner       Partner  @relation(fields: [partnerId], references: [id])
+
+  visitDate     DateTime
+  status        VisitStatus
+  notes         String?  
+  issues        Issue[]  
+  photos        Photo[]
+  checkInDate   DateTime? 
+  checkOutDate  DateTime? 
+  createdAt     DateTime @default(now())
 }
 
 model Partner {
@@ -30,29 +59,12 @@ model Partner {
   createdAt DateTime @default(now())
 }
 
-model Visit {
-  id            String   @id @default(uuid())
-  coordinatorId String
-  coordinator   User     @relation(fields: [coordinatorId], references: [id])
-  partnerId     String
-  partner       Partner  @relation(fields: [partnerId], references: [id])
-  visitDate     DateTime
-  status        VisitStatus
-
-  issues        Issue[]  
-  photos        Photo[]
-  checkInDate   DateTime? 
-  checkOutDate  DateTime? 
-  createdAt     DateTime @default(now())
-  report        Report[]
-}
-
 model Issue {
-  id          String       @id @default(uuid())
+  id          String      @id @default(uuid())
   visitId     String
-  visit       Visit        @relation(fields: [visitId], references: [id])
+  visit       Visit       @relation(fields: [visitId], references: [id])
   description String      
-  status      IssueStatus  
+  status      IssueStatus 
   createdAt   DateTime @default(now()) 
 }
 
@@ -66,14 +78,6 @@ model Photo {
   visitId String
   visit   Visit  @relation(fields: [visitId], references: [id])
   url     String
-}
-
-model Report {
-  id        String   @id @default(uuid())
-  visitId   String
-  visit     Visit    @relation(fields: [visitId], references: [id])
-  content   String   
-  createdAt DateTime @default(now()) 
 }
 
 enum Role {
