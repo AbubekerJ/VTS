@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { queryClient } from "../config/all-provider";
+import { queryClient } from "../../config/all-provider";
 
 export const useGetAllSchedule = () => {
   return useQuery({
