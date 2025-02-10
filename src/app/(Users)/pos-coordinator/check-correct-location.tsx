@@ -17,7 +17,7 @@ export const CheckIn = ({ schedule }: { schedule: ScheduleType }) => {
   const { mutate: updateSchedule } = useUpdateSchedule();
 
   // Predefined shop location
-  const shopLocation: Location = { latitude: 9.008909, longitude: 38.7472802 };
+  const shopLocation: Location = { latitude: 9.0241682, longitude: 38.766256 };
   const radius = 20;
 
   // Calculate distance between two locations
