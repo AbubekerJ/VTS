@@ -1,47 +1,97 @@
-import Image from "next/image";
+"use client";
 
-import UserAuthForm from "./Component/user-auth-fom";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { signIn } from "next-auth/react";
+import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-export default function AuthenticationPage() {
+const schema = z.object({
+  email: z.string().email({ message: "Invalid email!" }),
+  password: z
+    .string()
+    .min(8, { message: "Password must be at least 8 characters" }),
+});
+
+const UserAuthForm = () => {
+  const [loading, setLoading] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+  });
+
+  const onSubmitHandler = async (values: z.infer<typeof schema>) => {
+    setLoading(true);
+    const { email, password } = values;
+
+    const response = await signIn("credentials", {
+      email,
+      password,
+      callbackUrl: "/pos-coordinator",
+    });
+
+    if (response?.status === 200) {
+      reset();
+    }
+    setLoading(false);
+  };
+
   return (
-    <>
-      <div className="md:hidden">
-        {/* <Image
-          src="/examples/authentication-light.png"
-          width={1280}
-          height={843}
-          alt="Authentication"
-          className="block dark:hidden"
-        />
-        <Image
-          src="/examples/authentication-dark.png"
-          width={1280}
-          height={843}
-          alt="Authentication"
-          className="hidden dark:block"
-        /> */}
-      </div>
-      <div className="container relative px-6 lg:h-[970px]  flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
-        <div className="relative hidden h-full  flex-col bg-muted p-10 text-white dark:border-r lg:flex">
-          <div className="absolute inset-0 bg-zinc-400" />
-          <div className="relative z-20 flex items-center text-lg font-medium space-x-3">
-            <Image src={"/et-logo.png"} width={50} height={50} alt="logo" />
-            EthioTelecom
-          </div>
-        </div>
-
-        <div className="lg:p-8">
-          <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
-            <div className="flex flex-col space-y-2 text-center">
-              <h1 className="text-2xl font-semibold tracking-tight">LogIn</h1>
-              <p className="text-sm text-muted-foreground">
-                Enter your email and password to login
+    <div className="flex flex-col justify-center items-center h-screen bg-gray-100 px-4">
+      <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md">
+        <h2 className="text-2xl font-bold text-center text-gray-700 mb-6">
+          Sign In
+        </h2>
+        <form
+          className="flex flex-col gap-4"
+          onSubmit={handleSubmit(onSubmitHandler)}
+        >
+          <div>
+            <input
+              {...register("email")}
+              type="email"
+              placeholder="Email"
+              className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+            {errors?.email && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors?.email.message}
               </p>
-            </div>
-            <UserAuthForm />
+            )}
           </div>
-        </div>
+          <div>
+            <input
+              {...register("password")}
+              type="password"
+              placeholder="Password"
+              className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+            {errors?.password && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors?.password.message}
+              </p>
+            )}
+          </div>
+          <Button
+            className="flex justify-center items-center gap-2 bg-green-600  transition text-white font-bold py-6 px-6 rounded-xl"
+            disabled={loading}
+          >
+            {loading ? (
+              <Loader2 className="animate-spin" size={20} />
+            ) : (
+              "Sign In"
+            )}
+          </Button>
+        </form>
       </div>
-    </>
+    </div>
   );
-}
+};
+
+export default UserAuthForm;
