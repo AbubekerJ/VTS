@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { Bot, SquareTerminal, UsersRound, LayoutDashboard } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 import { NavMain } from "@/components/nav-main";
 
@@ -15,11 +16,11 @@ import {
 } from "@/components/ui/sidebar";
 import SidebarLogo from "./sidebar-logo";
 
-// This is sample data.
-const userRole = "idc-manager";
-const rolePermissions = {
-  "pos-coordinator": ["Visits"],
-  "idc-manager": ["Dashboard", "Pos-Coordinators"],
+type Role = "POS_COORDINATOR" | "IDC_MANAGER";
+
+const rolePermissions: Record<Role, string[]> = {
+  POS_COORDINATOR: ["Visits"],
+  IDC_MANAGER: ["Dashboard", "Pos-Coordinators"],
 };
 
 // Full data
@@ -74,11 +75,15 @@ const data = {
 };
 
 // Filter navigation items based on the user role
-const filteredNavMain = data.navMain.filter((item) =>
-  rolePermissions[userRole]?.includes(item.title)
-);
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { data: session } = useSession();
+  const userRole = session?.user?.role as Role | undefined;
+  const filteredNavMain = userRole
+    ? data.navMain.filter((item) =>
+        rolePermissions[userRole]?.includes(item.title)
+      )
+    : [];
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>

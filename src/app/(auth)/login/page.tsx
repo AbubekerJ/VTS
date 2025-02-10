@@ -1,12 +1,6 @@
-import { Metadata } from "next";
 import Image from "next/image";
 
 import UserAuthForm from "./Component/user-auth-fom";
-
-export const metadata: Metadata = {
-  title: "Authentication",
-  description: "Authentication forms built using the components.",
-};
 
 export default function AuthenticationPage() {
   return (

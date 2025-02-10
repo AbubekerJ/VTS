@@ -15,32 +15,63 @@ export async function middleware(req: NextRequest) {
     | "IDC_MANAGER"
     | "POS_COORDINATOR";
 
-  // Define protected routes and allowed roles
-  const protectedRoutes: { [key: string]: string[] } = {
-    "/admin": ["ADMIN"],
-    "/director": ["ADMIN", "DIRECTOR"],
-    "/manager": ["ADMIN", "DIRECTOR", "IDC_MANAGER"],
-    "/coordinator": ["ADMIN", "DIRECTOR", "IDC_MANAGER", "POS_COORDINATOR"],
-  };
-
-  const pathname = req.nextUrl.pathname;
-  console.log("pathname.........................", pathname);
-  for (const route in protectedRoutes) {
-    if (pathname.startsWith(route)) {
-      if (!protectedRoutes[route].includes(userRole)) {
-        return NextResponse.redirect(new URL("/unauthorized", req.url));
-      }
+  if (
+    token &&
+    userRole == "POS_COORDINATOR" &&
+    req.nextUrl.pathname.startsWith("/pos-coordinator")
+  ) {
+    return NextResponse.next();
+  } else if (
+    token &&
+    userRole == "IDC_MANAGER" &&
+    req.nextUrl.pathname.startsWith("/idc-manager")
+  ) {
+    return NextResponse.next();
+  } else if (
+    token &&
+    userRole == "ADMIN" &&
+    req.nextUrl.pathname.startsWith("/admin")
+  ) {
+    return NextResponse.next();
+  } else if (
+    token &&
+    userRole == "DIRECTOR" &&
+    req.nextUrl.pathname.startsWith("/director")
+  ) {
+    return NextResponse.next();
+  } else if (
+    token &&
+    userRole == "POS_COORDINATOR" &&
+    !req.nextUrl.pathname.startsWith("/pos-coordinator")
+  ) {
+    return NextResponse.redirect(new URL("/pos-coordinator", req.url));
+  } else if (
+    token &&
+    userRole == "IDC_MANAGER" &&
+    !req.nextUrl.pathname.startsWith("/idc-manager")
+  ) {
+    return NextResponse.redirect(new URL("/idc-manager", req.url));
+  } else if (
+    token &&
+    userRole == "ADMIN" &&
+    !req.nextUrl.pathname.startsWith("/admin")
+  ) {
+    return NextResponse.redirect(new URL("/admin", req.url));
+  } else if (
+    token &&
+    userRole == "DIRECTOR" &&
+    !req.nextUrl.pathname.startsWith("/director")
+  ) {
+    return NextResponse.redirect(new URL("/director", req.url));
+  } else {
+    if (!req.nextUrl.pathname.startsWith("/login")) {
+      return NextResponse.redirect(new URL("/login", req.url));
     }
   }
-
-  return NextResponse.next();
 }
 
 export const config = {
   matcher: [
-    "/admin/:path*",
-    "/director/:path*",
-    "/manager/:path*",
-    "/pos-coordinator/:path*",
+    "/((?!api|_next/static|_next/image|.*\\.png$|favicon.ico|login|forgot-password|kiosk|signage).*)",
   ],
 };
