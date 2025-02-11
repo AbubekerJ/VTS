@@ -67,7 +67,9 @@ export const columns: ColumnDef<ScheduleType>[] = [
     accessorKey: "status",
     header: () => <div className="text-left ">status</div>,
     cell: ({ row }) => (
-      <div className="capitalize ">{row.getValue("status")}</div>
+      <div className="capitalize bg-green-300 p-2">
+        {row.getValue("status")}
+      </div>
     ),
   },
 ];

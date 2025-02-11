@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Bot, SquareTerminal, UsersRound, LayoutDashboard } from "lucide-react";
+import { SquareTerminal, UsersRound, LayoutDashboard } from "lucide-react";
 import { useSession } from "next-auth/react";
 
 import { NavMain } from "@/components/nav-main";
@@ -15,6 +15,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import SidebarLogo from "./sidebar-logo";
+import { NavProjects } from "./nav-projects";
 
 type Role = "POS_COORDINATOR" | "IDC_MANAGER";
 
@@ -30,12 +31,14 @@ const data = {
     email: "test@example.com",
   },
 
-  navMain: [
+  projects: [
     {
-      title: "Dashboard",
-      url: "#",
+      name: "Dashboard",
+      url: "/idc-manager/dashboard",
       icon: LayoutDashboard,
     },
+  ],
+  navMain: [
     {
       title: "Visits",
       url: "#",
@@ -52,20 +55,21 @@ const data = {
         },
       ],
     },
-    {
-      title: "Reports",
-      url: "#",
-      icon: Bot,
-    },
+
     {
       title: "Pos-Coordinators",
-      url: "#",
+      url: "/idc-manager/visitors",
       icon: UsersRound,
-    },
-    {
-      title: "IDC-Managers",
-      url: "#",
-      icon: UsersRound,
+      items: [
+        {
+          title: "Visitor under this manager",
+          url: "/idc-manager/visitors",
+        },
+        {
+          title: "Issues Reported",
+          url: "/idc-manager/issues",
+        },
+      ],
     },
   ],
 };
@@ -88,7 +92,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <SidebarLogo />
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className=" gap-0 mt-8">
+        <NavProjects projects={data.projects} />
         <NavMain items={filteredNavMain} />
       </SidebarContent>
       <SidebarFooter>
