@@ -43,12 +43,12 @@ const data = {
       isActive: true,
       items: [
         {
-          title: "History",
-          url: "#",
+          title: "Schedules",
+          url: "/pos-coordinator",
         },
         {
-          title: "Pending",
-          url: "#",
+          title: "History",
+          url: "/pos-coordinator/pos-coordinator-history",
         },
       ],
     },

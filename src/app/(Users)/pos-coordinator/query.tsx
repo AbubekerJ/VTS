@@ -1,9 +1,10 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryClient } from "../../config/all-provider";
 import {
+  getCompletedVisits,
   getPosCoordinatorVisits,
   updateVisitStatus,
-} from "@/app/server/get-visits";
+} from "@/app/server/visits";
 import { VisitStatus } from "@prisma/client";
 export const useGetAllSchedule = () => {
   return useQuery({
@@ -26,3 +27,13 @@ export const useUpdateSchedule = () => {
     },
   });
 };
+
+export function useGetCompletedVists() {
+  return useQuery({
+    queryKey: ["CompletedVisits"],
+    queryFn: async () => {
+      const data = await getCompletedVisits();
+      return data;
+    },
+  });
+}

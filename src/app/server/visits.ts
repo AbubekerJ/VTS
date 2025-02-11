@@ -64,3 +64,37 @@ export async function updateVisitStatus({
     throw new Error("Failed to update visit status");
   }
 }
+
+export async function getCompletedVisits() {
+  const session = await getServerSession(authOptions);
+
+  try {
+    const response = await prisma.visit.findMany({
+      where: {
+        coordinatorId: session?.user.id,
+        status: {
+          in: [VisitStatus.COMPLETED],
+        },
+      },
+      select: {
+        id: true,
+        visitDate: true,
+        status: true,
+        partner: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+    return response.map((visit) => ({
+      id: visit.id,
+      date: new Date(visit.visitDate).toLocaleString(),
+      status: visit.status,
+      location: visit.partner.name,
+    }));
+  } catch (error) {
+    console.error("Error getting visit:", error);
+    throw new Error("Failed to get completed visit");
+  }
+}

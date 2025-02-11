@@ -1,12 +1,12 @@
 import React from "react";
-import { DataTableDemo } from "./table";
+import { PosCoordinatorSchedules } from "./table";
 
-const PosCordinator = () => {
+const PosCoordinator = () => {
   return (
     <div className="p-4 lg:p-10 xl:p-30 py-10  ">
-      <DataTableDemo />
+      <PosCoordinatorSchedules />
     </div>
   );
 };
 
-export default PosCordinator;
+export default PosCoordinator;

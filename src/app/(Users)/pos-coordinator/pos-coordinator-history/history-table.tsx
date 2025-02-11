@@ -25,8 +25,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { CheckInAction, CheckOutAction } from "./table-action";
-import { useGetAllSchedule } from "./query";
+import { useGetCompletedVists } from "../query";
 import { Visit } from "@/types/types";
 
 export type ScheduleType = {
@@ -64,51 +63,22 @@ export const columns: ColumnDef<ScheduleType>[] = [
       <div className="capitalize ">{row.getValue("date")}</div>
     ),
   },
-
   {
-    id: "checkInActions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const schedule = row.original;
-
-      if (schedule.status === "IN_PROGRESS") {
-        return (
-          <div className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary text-primary-foreground text-sm font-medium shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring h-9 px-4 py-2">
-            <p className="text-primary-foreground">Visiting</p>
-          </div>
-        );
-      } else if (schedule.status === "COMPLETED") {
-        return (
-          <div className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary text-primary-foreground text-sm font-medium shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring h-9 px-4 py-2">
-            <p className="text-primary-foreground">Completed</p>
-          </div>
-        );
-      }
-
-      return <CheckInAction schedule={schedule} />;
-    },
-  },
-
-  {
-    id: "checkOutActions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const Schedule = row.original;
-
-      return Schedule.status === "IN_PROGRESS" ? (
-        <CheckOutAction schedule={Schedule} />
-      ) : null;
-    },
+    accessorKey: "status",
+    header: () => <div className="text-left ">status</div>,
+    cell: ({ row }) => (
+      <div className="capitalize ">{row.getValue("status")}</div>
+    ),
   },
 ];
 
-export function PosCoordinatorSchedules() {
+export function PosCoordinatorSchedulesHistory() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
 
-  const { data: schedules, isLoading, isError } = useGetAllSchedule();
+  const { data: schedules, isLoading, isError } = useGetCompletedVists();
   if (isLoading) {
     console.log("loading................................................");
   }
