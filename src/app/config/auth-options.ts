@@ -15,6 +15,7 @@ export const authOptions: NextAuthOptions = {
         }
         try {
           const user = await authenticateUser(email, password);
+          console.log("user in the auth-options.....................", user);
           return user;
         } catch (error) {
           console.log(error);

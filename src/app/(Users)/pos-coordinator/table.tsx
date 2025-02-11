@@ -27,11 +27,12 @@ import {
 } from "@/components/ui/table";
 import { CheckInAction, CheckOutAction } from "./table-action";
 import { useGetAllSchedule } from "./query";
+import { Visit } from "@/types/types";
 
 export type ScheduleType = {
   id: string;
   date: string;
-  status: "pending" | "visiting" | "completed" | "failed";
+  status: "SCHEDULED" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED";
   location: string;
 };
 
@@ -70,13 +71,13 @@ export const columns: ColumnDef<ScheduleType>[] = [
     cell: ({ row }) => {
       const schedule = row.original;
 
-      if (schedule.status === "visiting") {
+      if (schedule.status === "IN_PROGRESS") {
         return (
           <div className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary text-primary-foreground text-sm font-medium shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring h-9 px-4 py-2">
             <p className="text-primary-foreground">Visiting</p>
           </div>
         );
-      } else if (schedule.status === "completed") {
+      } else if (schedule.status === "COMPLETED") {
         return (
           <div className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary text-primary-foreground text-sm font-medium shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring h-9 px-4 py-2">
             <p className="text-primary-foreground">Completed</p>
@@ -94,7 +95,7 @@ export const columns: ColumnDef<ScheduleType>[] = [
     cell: ({ row }) => {
       const Schedule = row.original;
 
-      return Schedule.status === "visiting" ? (
+      return Schedule.status === "IN_PROGRESS" ? (
         <CheckOutAction schedule={Schedule} />
       ) : null;
     },
@@ -121,12 +122,7 @@ export function DataTableDemo() {
     schedules
   );
 
-  // const data: ScheduleType[] = schedules
-  //   ? schedules.data.filter(
-  //       (schedule: ScheduleType) => schedule.status !== "completed"
-  //     )
-  //   : [];
-  const data: ScheduleType[] = schedules ? schedules.data : [];
+  const data: Visit[] = schedules ? schedules : [];
 
   const [rowSelection, setRowSelection] = React.useState({});
 

@@ -2,9 +2,8 @@ import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
 import { CheckOutDialog } from "./checkout-dialog";
 import { CheckIn } from "./check-correct-location";
-import { ScheduleType } from "./table";
-
-export const CheckOutAction = ({ schedule }: { schedule: ScheduleType }) => {
+import { Visit } from "@/types/types";
+export const CheckOutAction = ({ schedule }: { schedule: Visit }) => {
   const [showEditForm, setShowEditForm] = useState(false);
   return (
     <>
@@ -20,7 +19,7 @@ export const CheckOutAction = ({ schedule }: { schedule: ScheduleType }) => {
   );
 };
 
-export const CheckInAction = ({ schedule }: { schedule: ScheduleType }) => {
+export const CheckInAction = ({ schedule }: { schedule: Visit }) => {
   console.log();
   return <CheckIn schedule={schedule} />;
 };

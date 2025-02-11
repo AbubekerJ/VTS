@@ -51,10 +51,11 @@ export default function LogForm({ schedule }: { schedule: ScheduleType }) {
       });
 
       updateSchedule(
-        { id: schedule.id, status: "completed" },
+        { id: schedule.id, status: "COMPLETED" },
         {
           onSuccess: () => {
             console.log("succuss");
+            toast.success("update completed");
           },
           onError: (error) => {
             console.error("Update failed", error);

@@ -6,15 +6,15 @@ export async function authenticateUser(email: string, password: string) {
   try {
     const user = await prisma.user.findUnique({
       where: { email },
-      select: { id: true, email: true, password: true, role: true },
+      select: { id: true, email: true, password: true, role: true, name: true },
     });
-    console.log("user...................in server action ", user);
+
     if (!user) throw new Error("User not found");
 
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) throw new Error("Invalid password");
 
-    return { id: user.id, email: user.email, role: user.role };
+    return { id: user.id, email: user.email, role: user.role, name: user.name };
   } catch (error) {
     if (error instanceof Error) {
       throw new Error(error.message);

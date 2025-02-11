@@ -1,15 +1,15 @@
-import axios from "axios";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryClient } from "../../config/all-provider";
-
+import {
+  getPosCoordinatorVisits,
+  updateVisitStatus,
+} from "@/app/server/get-visits";
+import { VisitStatus } from "@prisma/client";
 export const useGetAllSchedule = () => {
   return useQuery({
     queryKey: ["schedule"],
     queryFn: async () => {
-      const data = await axios.get(
-        "https://6790d226af8442fd7377e073.mockapi.io/schedule"
-      );
-      console.log("data.....................................", data);
+      const data = await getPosCoordinatorVisits();
       return data;
     },
   });
@@ -17,12 +17,8 @@ export const useGetAllSchedule = () => {
 
 export const useUpdateSchedule = () => {
   return useMutation({
-    mutationFn: async ({ id, status }: { id: string; status: string }) => {
-      console.log("id......................", id);
-      const { data } = await axios.put(
-        `https://6790d226af8442fd7377e073.mockapi.io/schedule/${id}`,
-        { status }
-      );
+    mutationFn: async ({ id, status }: { id: string; status: VisitStatus }) => {
+      const data = await updateVisitStatus({ id, status });
       return data;
     },
     onSuccess: () => {

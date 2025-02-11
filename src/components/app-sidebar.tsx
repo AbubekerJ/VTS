@@ -47,10 +47,6 @@ const data = {
           url: "#",
         },
         {
-          title: "All",
-          url: "#",
-        },
-        {
           title: "Pending",
           url: "#",
         },
@@ -74,11 +70,14 @@ const data = {
   ],
 };
 
-// Filter navigation items based on the user role
-
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data: session } = useSession();
   const userRole = session?.user?.role as Role | undefined;
+  const userName = session?.user.name as string;
+  const userEmail = session?.user.email as string;
+
+  data.user.name = userName;
+  data.user.email = userEmail;
   const filteredNavMain = userRole
     ? data.navMain.filter((item) =>
         rolePermissions[userRole]?.includes(item.title)
