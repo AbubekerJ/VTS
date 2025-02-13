@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const schema = z.object({
   email: z.string().email({ message: "Invalid email!" }),
@@ -19,7 +21,9 @@ const schema = z.object({
 });
 
 const UserAuthForm = () => {
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -35,16 +39,22 @@ const UserAuthForm = () => {
       const { email, password } = values;
 
       const response = await signIn("credentials", {
+        redirect: false,
+
         email,
         password,
-        callbackUrl: "/pos-coordinator",
       });
 
-      if (response?.status === 200) {
+      if (response?.error) {
+        setError("Email or Password is incorrect");
+      } else {
         reset();
+        console.log("Sign-in successful");
+        router.push("/pos-coordinator");
       }
       setLoading(false);
     } catch (error) {
+      toast.error("Something went wrong. Please try again!");
       console.log(error);
     }
   };
@@ -74,12 +84,7 @@ const UserAuthForm = () => {
         >
           <div>
             <Label className="text-gray-400">Email</Label>
-            <Input
-              {...register("email")}
-              type="email"
-              placeholder="Email"
-              className="p-5"
-            />
+            <Input {...register("email")} placeholder="Email" className="p-5" />
             {errors?.email && (
               <p className="text-red-500 text-sm mt-1">
                 {errors?.email.message}
@@ -108,6 +113,7 @@ const UserAuthForm = () => {
             )}
           </Button>
         </form>
+        <p className="text-sm text-red-500 mt-4">{error && error}</p>
       </div>
     </div>
   );
