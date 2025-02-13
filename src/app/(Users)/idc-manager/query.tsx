@@ -1,5 +1,6 @@
 import { getAllIssues, getAllVisitIssues } from "@/app/server/issues";
 import { getVisitorUnderThisManager } from "@/app/server/pos-coordinators";
+import { getScheduledVisit } from "@/app/server/visits";
 import { useQuery } from "@tanstack/react-query";
 
 export const useGetAllVisitorUnderThisManager = () => {
@@ -33,6 +34,16 @@ export const useGetAllVisitIssues = () => {
     queryFn: async () => {
       const data = await getAllVisitIssues();
 
+      return data;
+    },
+  });
+};
+
+export const useGetScheduledVisits = () => {
+  return useQuery({
+    queryKey: ["scheduledVisit"],
+    queryFn: async () => {
+      const data = await getScheduledVisit();
       return data;
     },
   });

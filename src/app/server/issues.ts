@@ -1,5 +1,6 @@
 "use server";
 import { prisma } from "@/lib/prisma";
+import { getAuthSession } from "../config/auth-options";
 
 export async function getAllIssues() {
   try {
@@ -13,8 +14,11 @@ export async function getAllIssues() {
 
 export async function getAllVisitIssues() {
   try {
+    const session = await getAuthSession();
+
     const response = await prisma.visit.findMany({
       where: {
+        scheduledById: session?.user.id,
         status: "COMPLETED",
         issues: {
           some: {

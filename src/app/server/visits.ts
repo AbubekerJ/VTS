@@ -156,3 +156,44 @@ export async function getCompletedVisits() {
     throw new Error("Failed to get completed visit");
   }
 }
+
+//get scheduled visit
+export async function getScheduledVisit() {
+  const session = await getAuthSession();
+  console.log("sssssssssssssssssssssssssssssssssss", session?.user.id);
+  try {
+    const posCoordinatorVisits = await prisma.visit.findMany({
+      where: {
+        scheduledById: session?.user.id,
+        status: {
+          in: [VisitStatus.SCHEDULED, VisitStatus.IN_PROGRESS],
+        },
+      },
+      select: {
+        id: true,
+        visitDate: true,
+        status: true,
+        partner: {
+          select: {
+            name: true,
+          },
+        },
+        coordinator: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    return posCoordinatorVisits.map((visit) => ({
+      id: visit.id,
+      date: new Date(visit.visitDate).toISOString(),
+      status: visit.status,
+      location: visit.partner.name,
+      AssignedVisitor: visit.coordinator.name,
+    }));
+  } catch (error) {
+    console.log(error);
+  }
+}

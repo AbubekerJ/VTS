@@ -62,6 +62,10 @@ const data = {
       icon: UsersRound,
       items: [
         {
+          title: "Schedule",
+          url: "/idc-manager/schedules",
+        },
+        {
           title: "Visitor",
           url: "/idc-manager/visitors",
         },
