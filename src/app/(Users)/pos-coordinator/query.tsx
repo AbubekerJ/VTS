@@ -24,17 +24,23 @@ export const useSubmitVisitLogs = () => {
       status,
       issues,
       checkOutdate,
+      checkIndate,
+      notes,
     }: {
       id: string;
       status: VisitStatus;
       issues: { id: string }[];
       checkOutdate: string;
+      checkIndate: string;
+      notes: string;
     }) => {
       const data = await submitVisitLogs({
         id,
         status,
         issues,
         checkOutdate,
+        checkIndate,
+        notes,
       });
       return data;
     },

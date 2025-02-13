@@ -48,11 +48,15 @@ export async function submitVisitLogs({
   status,
   issues,
   checkOutdate,
+  checkIndate,
+  notes,
 }: {
   id: string;
   status: VisitStatus;
   issues: { id: string }[];
   checkOutdate: string;
+  checkIndate: string;
+  notes: string;
 }) {
   try {
     const response = await prisma.visit.update({
@@ -67,6 +71,8 @@ export async function submitVisitLogs({
           })),
         },
         checkOutDate: new Date(checkOutdate).toISOString(),
+        checkInDate: new Date(checkIndate).toISOString(),
+        notes,
       },
     });
     return response;

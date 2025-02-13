@@ -46,7 +46,18 @@ export const CheckIn = ({ schedule }: { schedule: Visit }) => {
 
   const handleCheckInSuccess = () => {
     const checkInTime = new Date().toISOString();
-    localStorage.setItem("checkInTime", checkInTime);
+
+    const existingCheckIns: { id: string; checkInTime: string }[] = JSON.parse(
+      localStorage.getItem("checkInTimes") || "[]"
+    );
+
+    const updatedCheckIns = [
+      ...existingCheckIns.filter((item) => item.id !== schedule.id),
+      { id: schedule.id, checkInTime },
+    ];
+
+    localStorage.setItem("checkInTimes", JSON.stringify(updatedCheckIns));
+
     updateSchedule(
       { id: schedule.id, status: "IN_PROGRESS" },
       {

@@ -47,15 +47,39 @@ export default function LogForm({ schedule }: { schedule: ScheduleType }) {
   function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       const checkOutDate = format(new Date(), "yyyy-MM-dd HH:mm:ss");
+      const storedCheckIns: { id: string; checkInTime: string }[] = JSON.parse(
+        localStorage.getItem("checkInTimes") || "[]"
+      );
+
+      const checkInDate = storedCheckIns.find(
+        (item) => item.id === schedule.id
+      );
+
+      if (checkInDate) {
+        console.log("Check-in Time:", checkInDate.checkInTime);
+      } else {
+        console.log("No check-in found for this ID.");
+      }
+
       updateSchedule(
         {
+          checkIndate: checkInDate?.checkInTime || "",
           checkOutdate: checkOutDate,
           id: schedule.id,
           status: "COMPLETED",
           issues: values.issues.map((id) => ({ id })),
+          notes: values.visit_report,
         },
         {
           onSuccess: () => {
+            const updatedCheckIns = storedCheckIns.filter(
+              (item) => item.id !== schedule.id
+            );
+            localStorage.setItem(
+              "checkInTimes",
+              JSON.stringify(updatedCheckIns)
+            );
+
             console.log("succuss");
             toast.success("update completed");
           },
