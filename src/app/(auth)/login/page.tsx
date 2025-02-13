@@ -7,6 +7,9 @@ import * as z from "zod";
 import { signIn } from "next-auth/react";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const schema = z.object({
   email: z.string().email({ message: "Invalid email!" }),
@@ -28,36 +31,54 @@ const UserAuthForm = () => {
 
   const onSubmitHandler = async (values: z.infer<typeof schema>) => {
     setLoading(true);
-    const { email, password } = values;
+    try {
+      const { email, password } = values;
 
-    const response = await signIn("credentials", {
-      email,
-      password,
-      callbackUrl: "/pos-coordinator",
-    });
+      const response = await signIn("credentials", {
+        email,
+        password,
+        callbackUrl: "/pos-coordinator",
+      });
 
-    if (response?.status === 200) {
-      reset();
+      if (response?.status === 200) {
+        reset();
+      }
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
     }
-    setLoading(false);
   };
 
   return (
     <div className="flex flex-col justify-center items-center h-screen bg-gray-100 px-4">
       <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center text-gray-700 mb-6">
-          Sign In
+        {/* Logo */}
+        <div className="flex justify-center mb-4">
+          <Image
+            src={"/et-logo-text.png"}
+            width={150}
+            height={150}
+            alt="logo"
+          />
+        </div>
+
+        {/* Title */}
+        <h2 className="text-3xl font-bold text-center text-gray-700 mb-4">
+          VTS
         </h2>
+
+        {/* Form */}
         <form
-          className="flex flex-col gap-4"
+          className="flex flex-col gap-6"
           onSubmit={handleSubmit(onSubmitHandler)}
         >
           <div>
-            <input
+            <Label className="text-gray-400">Email</Label>
+            <Input
               {...register("email")}
               type="email"
               placeholder="Email"
-              className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="p-5"
             />
             {errors?.email && (
               <p className="text-red-500 text-sm mt-1">
@@ -66,11 +87,12 @@ const UserAuthForm = () => {
             )}
           </div>
           <div>
-            <input
+            <Label className="text-gray-400">Password</Label>
+            <Input
               {...register("password")}
               type="password"
               placeholder="Password"
-              className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="p-5"
             />
             {errors?.password && (
               <p className="text-red-500 text-sm mt-1">
@@ -78,10 +100,7 @@ const UserAuthForm = () => {
               </p>
             )}
           </div>
-          <Button
-            className="flex justify-center items-center gap-2 bg-green-600  transition text-white font-bold py-6 px-6 rounded-xl"
-            disabled={loading}
-          >
+          <Button disabled={loading} className="p-5">
             {loading ? (
               <Loader2 className="animate-spin" size={20} />
             ) : (

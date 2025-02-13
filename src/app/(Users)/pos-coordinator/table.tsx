@@ -44,7 +44,7 @@ export const columns: ColumnDef<ScheduleType>[] = [
         <div className=" ">
           <Button
             variant="ghost"
-            className="pl-0"
+            className="pl-0 "
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             Partner Name
@@ -54,15 +54,15 @@ export const columns: ColumnDef<ScheduleType>[] = [
       );
     },
     cell: ({ row }) => (
-      <div className="lowercase ">{row.getValue("location")}</div>
+      <div className="capitalize bg-secondary w-max rounded py-1 px-4">
+        {row.getValue("location")}
+      </div>
     ),
   },
   {
     accessorKey: "date",
     header: () => <div className="text-left ">Schedule</div>,
-    cell: ({ row }) => (
-      <div className="capitalize ">{row.getValue("date")}</div>
-    ),
+    cell: ({ row }) => <div className="capitalize">{row.getValue("date")}</div>,
   },
 
   {
@@ -73,14 +73,8 @@ export const columns: ColumnDef<ScheduleType>[] = [
 
       if (schedule.status === "IN_PROGRESS") {
         return (
-          <div className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary text-primary-foreground text-sm font-medium shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring h-9 px-4 py-2">
-            <p className="text-primary-foreground">Visiting</p>
-          </div>
-        );
-      } else if (schedule.status === "COMPLETED") {
-        return (
-          <div className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary text-primary-foreground text-sm font-medium shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring h-9 px-4 py-2">
-            <p className="text-primary-foreground">Completed</p>
+          <div className="inline-flex items-center justify-center gap-2  rounded-md bg-secondary   h-6 px-4 py-0">
+            <p className="text-green-900">Visiting..</p>
           </div>
         );
       }

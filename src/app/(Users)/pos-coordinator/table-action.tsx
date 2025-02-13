@@ -8,9 +8,7 @@ export const CheckOutAction = ({ schedule }: { schedule: Visit }) => {
 
   return (
     <>
-      <Button onClick={() => setShowEditForm(true)} className="bg-blue-500">
-        CheckOut
-      </Button>
+      <Button onClick={() => setShowEditForm(true)}>CheckOut</Button>
       <CheckOutDialog
         schedule={schedule}
         open={showEditForm}

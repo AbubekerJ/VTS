@@ -21,7 +21,7 @@ type Role = "POS_COORDINATOR" | "IDC_MANAGER";
 
 const rolePermissions: Record<Role, string[]> = {
   POS_COORDINATOR: ["Visits"],
-  IDC_MANAGER: ["Dashboard", "Pos-Coordinators"],
+  IDC_MANAGER: ["Dashboard", "visitors"],
 };
 
 // Full data
@@ -57,12 +57,12 @@ const data = {
     },
 
     {
-      title: "Pos-Coordinators",
+      title: "visitors",
       url: "/idc-manager/visitors",
       icon: UsersRound,
       items: [
         {
-          title: "Visitor under this manager",
+          title: "Visitor",
           url: "/idc-manager/visitors",
         },
         {

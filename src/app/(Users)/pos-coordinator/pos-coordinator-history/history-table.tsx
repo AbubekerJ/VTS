@@ -26,13 +26,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useGetCompletedVists } from "../query";
-import { Visit } from "@/types/types";
 
 export type ScheduleType = {
   id: string;
-  date: string;
-  status: "SCHEDULED" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED";
+  completedDate: string | null;
   location: string;
+  issues: number;
 };
 
 export const columns: ColumnDef<ScheduleType>[] = [
@@ -53,22 +52,25 @@ export const columns: ColumnDef<ScheduleType>[] = [
       );
     },
     cell: ({ row }) => (
-      <div className="lowercase ">{row.getValue("location")}</div>
+      <div className="capitalize bg-secondary w-max rounded py-1 px-4">
+        {row.getValue("location")}
+      </div>
     ),
   },
   {
-    accessorKey: "date",
-    header: () => <div className="text-left ">Schedule</div>,
+    accessorKey: "completedDate",
+    header: () => <div className="text-left ">Completed</div>,
     cell: ({ row }) => (
-      <div className="capitalize ">{row.getValue("date")}</div>
+      <div className="capitalize ">{row.getValue("completedDate")}</div>
     ),
   },
+
   {
-    accessorKey: "status",
-    header: () => <div className="text-left ">status</div>,
+    accessorKey: "issues",
+    header: () => <div className="text-left ">Issue</div>,
     cell: ({ row }) => (
-      <div className="capitalize bg-green-300 p-2">
-        {row.getValue("status")}
+      <div className="capitalize  w-max text-destructive p-2 bg-secondary px-4 py-1">
+        {row.getValue("issues")} issues
       </div>
     ),
   },
@@ -94,7 +96,7 @@ export function PosCoordinatorSchedulesHistory() {
     schedules
   );
 
-  const data: Visit[] = schedules ? schedules : [];
+  const data: ScheduleType[] = schedules ? schedules : [];
 
   const [rowSelection, setRowSelection] = React.useState({});
 

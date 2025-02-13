@@ -106,7 +106,7 @@ export async function updateVisitStatus({
   }
 }
 
-//het completed visits
+//get completed visits
 export async function getCompletedVisits() {
   const session = await getAuthSession();
 
@@ -120,21 +120,37 @@ export async function getCompletedVisits() {
       },
       select: {
         id: true,
-        visitDate: true,
         status: true,
+        checkOutDate: true,
         partner: {
           select: {
             name: true,
           },
         },
+        issues: {
+          select: {
+            id: true,
+            status: true,
+          },
+        },
       },
     });
-    return response.map((visit) => ({
-      id: visit.id,
-      date: new Date(visit.visitDate).toLocaleString(),
-      status: visit.status,
-      location: visit.partner.name,
-    }));
+
+    return response.map((visit) => {
+      const notSolvedIssues = visit.issues.filter(
+        (issue) => issue.status === "NOT_SOLVED"
+      ).length;
+
+      return {
+        id: visit.id,
+
+        completedDate: visit.checkOutDate
+          ? new Date(visit.checkOutDate).toLocaleString()
+          : null,
+        issues: notSolvedIssues || 0,
+        location: visit.partner.name,
+      };
+    });
   } catch (error) {
     console.error("Error getting visit:", error);
     throw new Error("Failed to get completed visit");
