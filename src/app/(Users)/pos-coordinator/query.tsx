@@ -3,6 +3,7 @@ import { queryClient } from "../../config/all-provider";
 import {
   getCompletedVisits,
   getPosCoordinatorVisits,
+  submitVisitLogs,
   updateVisitStatus,
 } from "@/app/server/visits";
 import { VisitStatus } from "@prisma/client";
@@ -16,10 +17,40 @@ export const useGetAllSchedule = () => {
   });
 };
 
+export const useSubmitVisitLogs = () => {
+  return useMutation({
+    mutationFn: async ({
+      id,
+      status,
+      issues,
+      checkOutdate,
+    }: {
+      id: string;
+      status: VisitStatus;
+      issues: { id: string }[];
+      checkOutdate: string;
+    }) => {
+      const data = await submitVisitLogs({
+        id,
+        status,
+        issues,
+        checkOutdate,
+      });
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["schedule"] });
+    },
+  });
+};
+
 export const useUpdateSchedule = () => {
   return useMutation({
     mutationFn: async ({ id, status }: { id: string; status: VisitStatus }) => {
-      const data = await updateVisitStatus({ id, status });
+      const data = await updateVisitStatus({
+        id,
+        status,
+      });
       return data;
     },
     onSuccess: () => {

@@ -1,12 +1,12 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../config/auth-options";
+
+import { getAuthSession } from "../config/auth-options";
 import { VisitStatus } from "@prisma/client";
 export async function getPosCoordinatorVisits() {
-  const session = await getServerSession(authOptions);
-  console.log(session?.user.id);
+  const session = await getAuthSession();
+
   try {
     const posCoordinatorVisits = await prisma.visit.findMany({
       where: {
@@ -31,7 +31,7 @@ export async function getPosCoordinatorVisits() {
 
     return posCoordinatorVisits.map((visit) => ({
       id: visit.id,
-      date: new Date(visit.visitDate).toLocaleString(),
+      date: new Date(visit.visitDate).toISOString(),
       status: visit.status,
       location: visit.partner.name,
       latitude: visit.partner.latitude,
@@ -42,6 +42,41 @@ export async function getPosCoordinatorVisits() {
   }
 }
 
+///submit visit logs
+export async function submitVisitLogs({
+  id,
+  status,
+  issues,
+  checkOutdate,
+}: {
+  id: string;
+  status: VisitStatus;
+  issues: { id: string }[];
+  checkOutdate: string;
+}) {
+  try {
+    const response = await prisma.visit.update({
+      where: {
+        id,
+      },
+      data: {
+        status,
+        issues: {
+          connect: issues.map((issue) => ({
+            id: issue.id,
+          })),
+        },
+        checkOutDate: new Date(checkOutdate).toISOString(),
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error("Error updating visit:", error);
+    throw new Error("Failed to update visit status");
+  }
+}
+
+///update status
 export async function updateVisitStatus({
   id,
   status,
@@ -50,7 +85,7 @@ export async function updateVisitStatus({
   status: VisitStatus;
 }) {
   try {
-    const response = prisma.visit.update({
+    const response = await prisma.visit.update({
       where: {
         id,
       },
@@ -65,8 +100,9 @@ export async function updateVisitStatus({
   }
 }
 
+//het completed visits
 export async function getCompletedVisits() {
-  const session = await getServerSession(authOptions);
+  const session = await getAuthSession();
 
   try {
     const response = await prisma.visit.findMany({

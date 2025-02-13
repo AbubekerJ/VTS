@@ -1,9 +1,6 @@
-
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
-
-
-
+import { CheckInTimeProvider } from "./context/check-in-time-context";
 
 export default function RootLayout({
   children,
@@ -11,16 +8,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-
-       
-          <SidebarProvider>
-            <AppSidebar />
-            <main className=" w-full h-full  ">
-              <SidebarTrigger />
-              {children}
-            </main>
-          </SidebarProvider>
-       
- 
+    <SidebarProvider>
+      <AppSidebar />
+      <CheckInTimeProvider>
+        <main className=" w-full h-full  ">
+          <SidebarTrigger />
+          {children}
+        </main>
+      </CheckInTimeProvider>
+    </SidebarProvider>
   );
 }

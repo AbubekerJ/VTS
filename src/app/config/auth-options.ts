@@ -1,4 +1,4 @@
-import { NextAuthOptions } from "next-auth";
+import { getServerSession, NextAuthOptions } from "next-auth";
 import CredentialProvider from "next-auth/providers/credentials";
 import { authenticateUser } from "../server/login";
 
@@ -15,7 +15,6 @@ export const authOptions: NextAuthOptions = {
         }
         try {
           const user = await authenticateUser(email, password);
-          console.log("user in the auth-options.....................", user);
           return user;
         } catch (error) {
           console.log(error);
@@ -40,3 +39,5 @@ export const authOptions: NextAuthOptions = {
     },
   },
 };
+
+export const getAuthSession = () => getServerSession(authOptions);

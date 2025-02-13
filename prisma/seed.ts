@@ -61,6 +61,21 @@ async function main() {
 
   console.log(admin, director, manager, coordinator, "✅ Users seeded!");
 
+  // Check if the predefined issues exist, if not, create them
+
+  // If predefined issues are not found, create them
+
+  await prisma.issue.createMany({
+    data: [
+      { description: "Damaged product received", status: "NOT_SOLVED" },
+      { description: "Item not found in stock", status: "NOT_SOLVED" },
+      {
+        description: "Broken or malfunctioning store equipment",
+        status: "NOT_SOLVED",
+      },
+    ],
+  });
+
   // Fetch users
   const coordinatorUser = await prisma.user.findUnique({
     where: { email: "coordinator@gmail.com" },
@@ -123,7 +138,7 @@ async function main() {
 
   console.log(partner1, partner2, partner3, "✅ Partners seeded!");
 
-  // Seed visits
+  // Seed visits without issues (no issues assigned here)
   const visits = await prisma.visit.createMany({
     data: [
       {
@@ -165,24 +180,6 @@ async function main() {
   });
 
   console.log(visits, "✅ Visits seeded!");
-
-  // Fetch newly created visits
-  const allVisits = await prisma.visit.findMany();
-
-  // Seed issues for some visits
-  for (const visit of allVisits) {
-    if (visit.status !== "CANCELLED") {
-      await prisma.issue.create({
-        data: {
-          visitId: visit.id,
-          description: `Issue reported during ${visit.status.toLowerCase()} visit.`,
-          status: Math.random() > 0.5 ? "SOLVED" : "NOT_SOLVED",
-        },
-      });
-    }
-  }
-
-  console.log("✅ Issues seeded for visits!");
 }
 
 main()

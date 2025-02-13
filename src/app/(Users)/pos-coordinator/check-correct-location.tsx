@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useUpdateSchedule } from "./query";
 import { Visit } from "@/types/types";
-
 interface Location {
   latitude: number;
   longitude: number;
@@ -13,13 +12,9 @@ interface Location {
 export const CheckIn = ({ schedule }: { schedule: Visit }) => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  // const { setCheckInTime } = useCheckInTime();
 
   const { mutate: updateSchedule } = useUpdateSchedule();
-
-  console.log(
-    "all schedule in location finder file............................. ",
-    schedule.latitude
-  );
 
   // Predefined shop location
   const shopLocation: Location = {
@@ -27,10 +22,6 @@ export const CheckIn = ({ schedule }: { schedule: Visit }) => {
     longitude: schedule.longitude ?? 0,
   };
 
-  console.log(
-    "all schedule in location finder file............................. ",
-    shopLocation
-  );
   const radius = 20;
 
   // Calculate distance between two locations
@@ -54,6 +45,8 @@ export const CheckIn = ({ schedule }: { schedule: Visit }) => {
   console.log("Schedule status:", schedule.status);
 
   const handleCheckInSuccess = () => {
+    const checkInTime = new Date().toISOString();
+    localStorage.setItem("checkInTime", checkInTime);
     updateSchedule(
       { id: schedule.id, status: "IN_PROGRESS" },
       {

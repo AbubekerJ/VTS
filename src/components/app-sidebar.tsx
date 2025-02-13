@@ -31,7 +31,7 @@ const data = {
     email: "test@example.com",
   },
 
-  projects: [
+  dashboard: [
     {
       name: "Dashboard",
       url: "/idc-manager/dashboard",
@@ -87,13 +87,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         rolePermissions[userRole]?.includes(item.title)
       )
     : [];
+
+  const filteredDashboards =
+    userRole && rolePermissions[userRole]
+      ? data.dashboard.filter((dashboard) =>
+          rolePermissions[userRole].includes(dashboard.name)
+        )
+      : [];
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <SidebarLogo />
       </SidebarHeader>
       <SidebarContent className=" gap-0 mt-8">
-        <NavProjects projects={data.projects} />
+        <NavProjects dashboard={filteredDashboards} />
         <NavMain items={filteredNavMain} />
       </SidebarContent>
       <SidebarFooter>

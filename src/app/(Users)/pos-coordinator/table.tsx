@@ -117,11 +117,6 @@ export function PosCoordinatorSchedules() {
     console.log("error................................................");
   }
 
-  console.log(
-    "schedules................................................",
-    schedules
-  );
-
   const data: Visit[] = schedules ? schedules : [];
 
   const [rowSelection, setRowSelection] = React.useState({});

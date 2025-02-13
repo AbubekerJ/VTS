@@ -10,9 +10,9 @@ import {
 } from "@/components/ui/sidebar";
 
 export function NavProjects({
-  projects,
+  dashboard,
 }: {
-  projects: {
+  dashboard: {
     name: string;
     url: string;
     icon: LucideIcon;
@@ -21,7 +21,7 @@ export function NavProjects({
   return (
     <SidebarGroup className="my-0 py-0 ">
       <SidebarMenu>
-        {projects.map((item) => (
+        {dashboard.map((item) => (
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton asChild>
               <a href={item.url}>

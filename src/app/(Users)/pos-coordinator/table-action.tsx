@@ -5,6 +5,7 @@ import { CheckIn } from "./check-correct-location";
 import { Visit } from "@/types/types";
 export const CheckOutAction = ({ schedule }: { schedule: Visit }) => {
   const [showEditForm, setShowEditForm] = useState(false);
+
   return (
     <>
       <Button onClick={() => setShowEditForm(true)} className="bg-blue-500">
@@ -20,6 +21,5 @@ export const CheckOutAction = ({ schedule }: { schedule: Visit }) => {
 };
 
 export const CheckInAction = ({ schedule }: { schedule: Visit }) => {
-  console.log();
   return <CheckIn schedule={schedule} />;
 };
