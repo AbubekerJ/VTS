@@ -27,6 +27,9 @@ export async function getPosCoordinatorVisits() {
           },
         },
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
 
     return posCoordinatorVisits.map((visit) => ({
@@ -221,8 +224,6 @@ export async function rescheduleVisit({
     console.log(error);
   }
 }
-
-
 
 //schedule visit
 export async function scheduleVisit({

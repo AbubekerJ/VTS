@@ -1,7 +1,6 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-
 import { getAuthSession } from "../config/auth-options";
 
 export async function getVisitorUnderThisManager() {
@@ -10,7 +9,7 @@ export async function getVisitorUnderThisManager() {
   const UserId = session?.user.id;
   try {
     if (!UserId) {
-      throw new Error("user is not authenticated");
+      throw new Error("User is not authenticated");
     }
 
     const manager = await prisma.user.findUnique({
@@ -21,8 +20,10 @@ export async function getVisitorUnderThisManager() {
     });
 
     if (!manager) {
-      throw new Error("idc-manager not found");
+      throw new Error("IDC Manager not found");
     }
+
+    // Get the count of visits for each coordinator
     const response = await prisma.user.findMany({
       where: {
         role: "POS_COORDINATOR",
@@ -31,11 +32,29 @@ export async function getVisitorUnderThisManager() {
       select: {
         id: true,
         name: true,
+        email: true,
+        _count: {
+          select: {
+            visitsAsCoordinator: {
+              where: {
+                status: "COMPLETED",
+              },
+            },
+          },
+        },
       },
     });
-    return response;
+
+    const formattedResponse = response.map((user) => ({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      visitsCount: user._count.visitsAsCoordinator,
+    }));
+
+    return formattedResponse;
   } catch (error) {
     console.error("Error getting visitors:", error);
-    throw new Error("Failed to get  visitors");
+    throw new Error("Failed to get visitors");
   }
 }
