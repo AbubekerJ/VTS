@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { useUpdateSchedule } from "./query";
+import { useUpdateSchedule } from "../query";
 import { Visit } from "@/types/types";
 interface Location {
   latitude: number;
@@ -118,7 +118,7 @@ export const CheckIn = ({ schedule }: { schedule: Visit }) => {
 
   return (
     <div className="check-in-container p-4">
-      <Button onClick={handleCheckIn}>
+      <Button variant="outline" size="sm" onClick={handleCheckIn}>
         {loading ? "Checking In ..." : "Check in"}
       </Button>
       {error && <p className="mt-4 text-red-500">{error}</p>}

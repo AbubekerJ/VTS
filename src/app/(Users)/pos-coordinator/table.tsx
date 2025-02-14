@@ -25,9 +25,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { CheckInAction, CheckOutAction } from "./table-action";
+import { CheckInAction, CheckOutAction } from "./component/table-action";
 import { useGetAllSchedule } from "./query";
 import { Visit } from "@/types/types";
+import { format } from "date-fns";
 
 export type ScheduleType = {
   id: string;
@@ -61,8 +62,13 @@ export const columns: ColumnDef<ScheduleType>[] = [
   },
   {
     accessorKey: "date",
-    header: () => <div className="text-left ">Schedule</div>,
-    cell: ({ row }) => <div className="capitalize">{row.getValue("date")}</div>,
+    header: () => <div className="text-left">Schedule</div>,
+    cell: ({ row }) => {
+      const date = new Date(row.getValue("date"));
+      const formattedDate = format(date, "dd-MM-yyyy/HH:mm");
+
+      return <div className="capitalize">{formattedDate}</div>;
+    },
   },
 
   {
@@ -73,7 +79,7 @@ export const columns: ColumnDef<ScheduleType>[] = [
 
       if (schedule.status === "IN_PROGRESS") {
         return (
-          <div className="inline-flex items-center justify-center gap-2  rounded-md bg-secondary   h-6 px-4 py-0">
+          <div className="inline-flex items-center justify-center gap-2  rounded-md bg-secondary   h-7 px-4 py-0">
             <p className="text-green-900">Visiting..</p>
           </div>
         );

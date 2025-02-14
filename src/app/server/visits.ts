@@ -197,3 +197,68 @@ export async function getScheduledVisit() {
     console.log(error);
   }
 }
+
+////reschedule visit
+
+export async function rescheduleVisit({
+  id,
+  rescheduleDate,
+}: {
+  id: string;
+  rescheduleDate: string;
+}) {
+  try {
+    const response = await prisma.visit.update({
+      where: {
+        id,
+      },
+      data: {
+        visitDate: new Date(rescheduleDate).toISOString(),
+      },
+    });
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
+
+//schedule visit
+export async function scheduleVisit({
+  date,
+  partner,
+  visitor,
+}: {
+  date: string;
+  partner: string;
+  visitor: string;
+}) {
+  const session = await getAuthSession();
+
+  if (!session?.user?.id) {
+    throw new Error(
+      "Unauthorized: User must be logged in to schedule a visit."
+    );
+  }
+
+  if (!date || !partner || !visitor) {
+    throw new Error("Missing required fields.");
+  }
+
+  try {
+    const response = await prisma.visit.create({
+      data: {
+        visitDate: date,
+        scheduledById: session.user.id,
+        partnerId: partner,
+        coordinatorId: visitor,
+        status: "SCHEDULED",
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error("Schedule visit error:", error);
+    throw new Error("Failed to schedule visit: ");
+  }
+}

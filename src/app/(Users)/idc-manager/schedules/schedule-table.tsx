@@ -35,6 +35,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useGetScheduledVisits } from "../query";
 import { format } from "date-fns";
+import { RescheduleAction } from "../component/table-action";
+import AddSchedule from "../component/add-schedule-form";
 
 export type ScheduleType = {
   id: string;
@@ -107,7 +109,6 @@ export const columns: ColumnDef<ScheduleType>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      // const payment = row.original
       const schedule = row.original;
       console.log("row");
 
@@ -121,15 +122,18 @@ export const columns: ColumnDef<ScheduleType>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+              <RescheduleAction scheduleId={schedule.id} />
+            </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() =>
                 console.log(
-                  "issue id.................................",
+                  "schedule id.................................",
                   schedule.id
                 )
               }
             >
-              Reschedule
+              <p className="capitalize text-red-500 cursor-pointer">Delete</p>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -143,6 +147,8 @@ export function ScheduleTable() {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+
+  const [showAddScheduleForm, setShowAddScheduleForm] = React.useState(false);
 
   const { data: schedules, isLoading, isError } = useGetScheduledVisits();
   if (isLoading) {
@@ -176,7 +182,7 @@ export function ScheduleTable() {
 
   return (
     <div className="lg:w-[80%] lg:mx-auto">
-      <div className="flex items-center py-4">
+      <div className="flex items-center justify-between py-4">
         <Input
           placeholder="Filter Partners..."
           value={
@@ -187,6 +193,9 @@ export function ScheduleTable() {
           }
           className="max-w-sm"
         />
+        <Button onClick={() => setShowAddScheduleForm(true)}>
+          Add Schedule
+        </Button>
       </div>
       <div className="rounded-md border">
         <Table>
@@ -260,6 +269,10 @@ export function ScheduleTable() {
           >
             Next
           </Button>
+          <AddSchedule
+            open={showAddScheduleForm}
+            onClose={() => setShowAddScheduleForm(false)}
+          />
         </div>
       </div>
     </div>

@@ -10,8 +10,8 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
 
 const schema = z.object({
   email: z.string().email({ message: "Invalid email!" }),
@@ -24,6 +24,7 @@ const UserAuthForm = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { toast } = useToast();
   const {
     register,
     handleSubmit,
@@ -54,7 +55,11 @@ const UserAuthForm = () => {
       }
       setLoading(false);
     } catch (error) {
-      toast.error("Something went wrong. Please try again!");
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "There was a problem with your request.",
+      });
       console.log(error);
     }
   };

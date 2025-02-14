@@ -1,7 +1,13 @@
+import { queryClient } from "@/app/config/all-provider";
 import { getAllIssues, getAllVisitIssues } from "@/app/server/issues";
+import { getAllPartners } from "@/app/server/partners";
 import { getVisitorUnderThisManager } from "@/app/server/pos-coordinators";
-import { getScheduledVisit } from "@/app/server/visits";
-import { useQuery } from "@tanstack/react-query";
+import {
+  getScheduledVisit,
+  rescheduleVisit,
+  scheduleVisit,
+} from "@/app/server/visits";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const useGetAllVisitorUnderThisManager = () => {
   return useQuery({
@@ -45,6 +51,75 @@ export const useGetScheduledVisits = () => {
     queryFn: async () => {
       const data = await getScheduledVisit();
       return data;
+    },
+  });
+};
+
+//reschedule visit
+
+export const useUpdateVisitDate = () => {
+  return useMutation({
+    mutationFn: async ({
+      id,
+      rescheduleDate,
+    }: {
+      id: string;
+      rescheduleDate: string;
+    }) => {
+      const data = await rescheduleVisit({
+        id,
+        rescheduleDate,
+      });
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["scheduledVisit"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["schedule"],
+      });
+    },
+  });
+};
+
+////get all partners
+
+export const useGetAllPartners = () => {
+  return useQuery({
+    queryKey: ["partners"],
+    queryFn: async () => {
+      const data = await getAllPartners();
+      console.log(
+        "all partners data in query file................................",
+        data
+      );
+      return data;
+    },
+  });
+};
+
+//schedule visit
+
+export const useScheduleVisit = () => {
+  return useMutation({
+    mutationFn: async ({
+      date,
+      partner,
+      visitor,
+    }: {
+      date: string;
+      partner: string;
+      visitor: string;
+    }) => {
+      const data = await scheduleVisit({ date, partner, visitor });
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["scheduledVisit"] });
+    },
+    onError: (error) => {
+      console.error("Error scheduling visit:", error);
     },
   });
 };
