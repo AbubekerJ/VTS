@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { getAuthSession } from "../config/auth-options";
+import bcrypt from "bcryptjs";
 
 export async function getVisitorUnderThisManager() {
   const session = await getAuthSession();
@@ -56,5 +57,37 @@ export async function getVisitorUnderThisManager() {
   } catch (error) {
     console.error("Error getting visitors:", error);
     throw new Error("Failed to get visitors");
+  }
+}
+
+export async function createVisitor(values: {
+  name: string;
+  email: string;
+  password: string;
+}) {
+  const session = await getAuthSession();
+
+  const managerId = session?.user.id;
+  const Password = values.password;
+
+  const hashedPassword = await bcrypt.hash(Password, 10);
+  try {
+    if (!managerId) {
+      throw new Error("User is not authenticated");
+    }
+
+    const response = await prisma.user.create({
+      data: {
+        ...values,
+        password: hashedPassword,
+        role: "POS_COORDINATOR",
+        managerId: managerId,
+      },
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Error creating visitor:", error);
+    throw new Error("Failed to create visitor");
   }
 }

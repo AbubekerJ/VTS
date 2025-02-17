@@ -1,10 +1,14 @@
 "use client";
 
 import * as React from "react";
-import { SquareTerminal, UsersRound, LayoutDashboard } from "lucide-react";
+import {
+  UsersRound,
+  LayoutDashboard,
+  CalendarCheck2,
+  Bug,
+  FileClock,
+} from "lucide-react";
 import { useSession } from "next-auth/react";
-
-import { NavMain } from "@/components/nav-main";
 
 import { NavUser } from "@/components/nav-user";
 import {
@@ -20,8 +24,8 @@ import { NavProjects } from "./nav-projects";
 type Role = "POS_COORDINATOR" | "IDC_MANAGER";
 
 const rolePermissions: Record<Role, string[]> = {
-  POS_COORDINATOR: ["Visits"],
-  IDC_MANAGER: ["Dashboard", "visitors"],
+  POS_COORDINATOR: ["Schedule", "History"],
+  IDC_MANAGER: ["Dashboard", "Schedule", "Visitor", "Issues Reported"],
 };
 
 // Full data
@@ -30,50 +34,31 @@ const data = {
     name: "Test User",
     email: "test@example.com",
   },
-
-  dashboard: [
+  MainItems: [
     {
       name: "Dashboard",
       url: "/idc-manager/dashboard",
       icon: LayoutDashboard,
     },
-  ],
-  navMain: [
     {
-      title: "Visits",
-      url: "#",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "Schedules",
-          url: "/pos-coordinator",
-        },
-        {
-          title: "History",
-          url: "/pos-coordinator/pos-coordinator-history",
-        },
-      ],
+      name: "Schedule",
+      url: "/idc-manager/schedules",
+      icon: CalendarCheck2,
     },
-
     {
-      title: "visitors",
+      name: "Visitor",
       url: "/idc-manager/visitors",
       icon: UsersRound,
-      items: [
-        {
-          title: "Schedule",
-          url: "/idc-manager/schedules",
-        },
-        {
-          title: "Visitor",
-          url: "/idc-manager/visitors",
-        },
-        {
-          title: "Issues Reported",
-          url: "/idc-manager/issues",
-        },
-      ],
+    },
+    {
+      name: "Issues Reported",
+      url: "/idc-manager/issues",
+      icon: Bug,
+    },
+    {
+      name: "History",
+      url: "/pos-coordinator/pos-coordinator-history",
+      icon: FileClock,
     },
   ],
 };
@@ -86,26 +71,21 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   data.user.name = userName;
   data.user.email = userEmail;
-  const filteredNavMain = userRole
-    ? data.navMain.filter((item) =>
-        rolePermissions[userRole]?.includes(item.title)
-      )
-    : [];
 
   const filteredDashboards =
     userRole && rolePermissions[userRole]
-      ? data.dashboard.filter((dashboard) =>
-          rolePermissions[userRole].includes(dashboard.name)
+      ? data.MainItems.filter((item) =>
+          rolePermissions[userRole].includes(item.name)
         )
       : [];
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <SidebarLogo />
       </SidebarHeader>
-      <SidebarContent className=" gap-0 mt-8">
+      <SidebarContent className="mt-11">
         <NavProjects dashboard={filteredDashboards} />
-        <NavMain items={filteredNavMain} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

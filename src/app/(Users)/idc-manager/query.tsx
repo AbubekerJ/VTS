@@ -1,7 +1,10 @@
 import { queryClient } from "@/app/config/all-provider";
 import { getAllIssues, getAllVisitIssues } from "@/app/server/issues";
 import { getAllPartners } from "@/app/server/partners";
-import { getVisitorUnderThisManager } from "@/app/server/pos-coordinators";
+import {
+  createVisitor,
+  getVisitorUnderThisManager,
+} from "@/app/server/pos-coordinators";
 import {
   getScheduledVisit,
   rescheduleVisit,
@@ -120,6 +123,31 @@ export const useScheduleVisit = () => {
     },
     onError: (error) => {
       console.error("Error scheduling visit:", error);
+    },
+  });
+};
+
+///create visitor
+
+export const useCreateVisitor = () => {
+  return useMutation({
+    mutationFn: async ({
+      name,
+      email,
+      password,
+    }: {
+      name: string;
+      email: string;
+      password: string;
+    }) => {
+      const data = await createVisitor({ name, email, password });
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["visitors"] });
+    },
+    onError: (error) => {
+      console.error("Error creating visitor:", error);
     },
   });
 };

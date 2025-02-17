@@ -34,7 +34,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import AddSchedule from "../component/add-schedule-form";
+import AddVisitorForm from "../component/add-user-form";
 
 export type Visitor = {
   id: string;
@@ -79,7 +79,7 @@ export const columns: ColumnDef<Visitor>[] = [
     accessorKey: "visitsCount",
     header: () => <div className="text-left ">Visit Count</div>,
     cell: ({ row }) => (
-      <div className="capitalize bg-green-200 px-3 p-1 w-max text-green-900 rounded ">
+      <div className="capitalize bg-green-50 px-3 p-1 w-max text-green-900 rounded ">
         {row.getValue("visitsCount")} Completed
       </div>
     ),
@@ -141,9 +141,9 @@ export function VisitorTable() {
   }
   console.log("visitors..........................", visitors);
 
-  const [showAddScheduleForm, setShowAddScheduleForm] = React.useState(false);
+  const [showAddVisitorForm, setShowAddVisitorForm] = React.useState(false);
 
-  const data: Visitor[] = visitors ? visitors : [];
+  const data = React.useMemo(() => visitors || [], [visitors]);
 
   const [rowSelection, setRowSelection] = React.useState({});
 
@@ -175,9 +175,7 @@ export function VisitorTable() {
           }
           className="max-w-sm"
         />
-        <Button onClick={() => setShowAddScheduleForm(true)}>
-          Add Schedule
-        </Button>
+        <Button onClick={() => setShowAddVisitorForm(true)}>Add Visitor</Button>
       </div>
       <div className="rounded-md border">
         <Table>
@@ -251,9 +249,9 @@ export function VisitorTable() {
           >
             Next
           </Button>
-          <AddSchedule
-            open={showAddScheduleForm}
-            onClose={() => setShowAddScheduleForm(false)}
+          <AddVisitorForm
+            open={showAddVisitorForm}
+            onClose={() => setShowAddVisitorForm(false)}
           />
         </div>
       </div>
