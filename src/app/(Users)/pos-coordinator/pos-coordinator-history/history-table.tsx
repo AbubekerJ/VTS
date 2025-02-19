@@ -91,11 +91,6 @@ export function PosCoordinatorSchedulesHistory() {
     console.log("error................................................");
   }
 
-  console.log(
-    "schedules................................................",
-    schedules
-  );
-
   const data: ScheduleType[] = schedules ? schedules : [];
 
   const [rowSelection, setRowSelection] = React.useState({});

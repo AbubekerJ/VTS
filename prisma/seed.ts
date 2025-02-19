@@ -62,17 +62,11 @@ async function main() {
   console.log(admin, director, manager, coordinator, "✅ Users seeded!");
 
   // Check if the predefined issues exist, if not, create them
-
-  // If predefined issues are not found, create them
-
   await prisma.issue.createMany({
     data: [
-      { description: "Damaged product received", status: "NOT_SOLVED" },
-      { description: "Item not found in stock", status: "NOT_SOLVED" },
-      {
-        description: "Broken or malfunctioning store equipment",
-        status: "NOT_SOLVED",
-      },
+      { description: "Damaged product received" },
+      { description: "Item not found in stock" },
+      { description: "Broken or malfunctioning store equipment" },
     ],
   });
 
@@ -122,13 +116,13 @@ async function main() {
   }
 
   let partner3 = await prisma.partner.findFirst({
-    where: { name: "mexico retail" },
+    where: { name: "Mexico retail" },
   });
 
   if (!partner3) {
     partner3 = await prisma.partner.create({
       data: {
-        name: "mexico retail",
+        name: "Mexico retail",
         latitude: 51.5074,
         longitude: -0.1278,
         contact: "contact@oceansys.com",
@@ -148,6 +142,7 @@ async function main() {
         visitDate: new Date(),
         status: "SCHEDULED",
         notes: "Routine checkup",
+        VisitIssue: JSON.stringify([]), // Initialize with empty array for issues
       },
       {
         coordinatorId: coordinator.id,
@@ -157,6 +152,7 @@ async function main() {
         status: "IN_PROGRESS",
         checkInDate: new Date(),
         notes: "Verifying product quality",
+        VisitIssue: JSON.stringify([]), // Initialize with empty array for issues
       },
       {
         coordinatorId: coordinator.id,
@@ -167,6 +163,7 @@ async function main() {
         checkInDate: new Date(),
         checkOutDate: new Date(),
         notes: "Inspection completed successfully",
+        VisitIssue: JSON.stringify([]), // Initialize with empty array for issues
       },
       {
         coordinatorId: coordinator.id,
@@ -175,6 +172,7 @@ async function main() {
         visitDate: new Date(),
         status: "CANCELLED",
         notes: "Visit cancelled due to scheduling conflicts",
+        VisitIssue: JSON.stringify([]), // Initialize with empty array for issues
       },
     ],
   });

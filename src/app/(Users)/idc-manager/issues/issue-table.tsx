@@ -28,12 +28,15 @@ import {
 import { useGetAllVisitIssues } from "../query";
 import { format } from "date-fns";
 
+import IssueTableAction from "./issue-table-action";
+
 export type IssueType = {
   visitId: string;
   issueId: string;
   createdBy: string;
   partner: string;
   issue: string;
+  status: string;
   createdDate: string | undefined;
 };
 
@@ -78,12 +81,36 @@ export const columns: ColumnDef<IssueType>[] = [
     ),
   },
   {
+    accessorKey: "status",
+    header: () => <div className="text-left">Status</div>,
+    cell: ({ row }) => {
+      const status: string = row.getValue("status");
+      const textColor = status === "SOLVED" ? "text-green-500" : "text-red-500";
+
+      return (
+        <div className={`capitalize w-max p-2 px-4 py-1  ${textColor}`}>
+          {status.replaceAll("_", " ")}
+        </div>
+      );
+    },
+  },
+
+  {
     accessorKey: "createdDate",
     header: () => <div className="text-left">Created Date</div>,
     cell: ({ row }) => {
       const date = new Date(row.getValue("createdDate"));
       const formattedDate = format(date, "dd-MM-yyyy");
       return <div className="capitalize">{formattedDate}</div>;
+    },
+  },
+  {
+    id: "actions",
+    enableHiding: false,
+    cell: ({ row }) => {
+      const issue = row.original;
+
+      return <IssueTableAction issue={issue} />;
     },
   },
 ];
@@ -95,7 +122,6 @@ export function IssueTable() {
   );
 
   const { data: issues, isLoading, isError } = useGetAllVisitIssues();
-  console.log("issues.........................................", issues);
   if (isLoading) {
     console.log("loading................................................");
   }
@@ -104,12 +130,11 @@ export function IssueTable() {
     console.log("error................................................");
   }
 
-  console.log(
-    "schedules................................................",
-    issues
-  );
+
 
   const data: IssueType[] = issues ? issues : [];
+
+  console.log('data..............payload ........................................',data)
 
   const [rowSelection, setRowSelection] = React.useState({});
 

@@ -37,11 +37,10 @@ model Visit {
   visitDate    DateTime
   status       VisitStatus
   notes        String?
-  issues       Issue[]
-  photos       Photo[]
   checkInDate  DateTime?
   checkOutDate DateTime?
   createdAt    DateTime    @default(now())
+  VisitIssue   Json?
 }
 
 model Partner {
@@ -55,24 +54,9 @@ model Partner {
 }
 
 model Issue {
-  id     String  @id @default(uuid())
-  visits Visit[]
-
+  id          String   @id @default(uuid())
   description String
-  status      IssueStatus
-  createdAt   DateTime    @default(now())
-}
-
-enum IssueStatus {
-  SOLVED
-  NOT_SOLVED
-}
-
-model Photo {
-  id      String @id @default(uuid())
-  visitId String
-  visit   Visit  @relation(fields: [visitId], references: [id])
-  url     String
+  createdAt   DateTime @default(now())
 }
 
 enum Role {

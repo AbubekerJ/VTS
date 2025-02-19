@@ -45,7 +45,7 @@ export async function getPosCoordinatorVisits() {
   }
 }
 
-///submit visit logs
+//submit visit log
 export async function submitVisitLogs({
   id,
   status,
@@ -56,7 +56,7 @@ export async function submitVisitLogs({
 }: {
   id: string;
   status: VisitStatus;
-  issues: { id: string }[];
+  issues: { issueId: string; description: string; status: string }[];
   checkOutdate: string;
   checkIndate: string;
   notes: string;
@@ -68,16 +68,13 @@ export async function submitVisitLogs({
       },
       data: {
         status,
-        issues: {
-          connect: issues.map((issue) => ({
-            id: issue.id,
-          })),
-        },
-        checkOutDate: new Date(checkOutdate).toISOString(),
-        checkInDate: new Date(checkIndate).toISOString(),
+        VisitIssue: JSON.stringify(issues),
+        checkOutDate: new Date(checkOutdate),
+        checkInDate: new Date(checkIndate),
         notes,
       },
     });
+
     return response;
   } catch (error) {
     console.error("Error updating visit:", error);
@@ -108,8 +105,7 @@ export async function updateVisitStatus({
     throw new Error("Failed to update visit status");
   }
 }
-
-//get completed visits
+// Get completed visits
 export async function getCompletedVisits() {
   const session = await getAuthSession();
 
@@ -117,9 +113,7 @@ export async function getCompletedVisits() {
     const response = await prisma.visit.findMany({
       where: {
         coordinatorId: session?.user.id,
-        status: {
-          in: [VisitStatus.COMPLETED],
-        },
+        status: VisitStatus.COMPLETED,
       },
       select: {
         id: true,
@@ -130,33 +124,32 @@ export async function getCompletedVisits() {
             name: true,
           },
         },
-        issues: {
-          select: {
-            id: true,
-            status: true,
-          },
-        },
+        VisitIssue: true,
       },
     });
 
     return response.map((visit) => {
-      const notSolvedIssues = visit.issues.filter(
-        (issue) => issue.status === "NOT_SOLVED"
+      const issues =
+        typeof visit.VisitIssue === "string"
+          ? JSON.parse(visit.VisitIssue)
+          : [];
+
+      const notSolvedIssues = issues.filter(
+        (issue: { status: string }) => issue.status === "NOT_SOLVED"
       ).length;
 
       return {
         id: visit.id,
-
         completedDate: visit.checkOutDate
           ? new Date(visit.checkOutDate).toLocaleString()
           : null,
         issues: notSolvedIssues || 0,
-        location: visit.partner.name,
+        location: visit.partner?.name ?? "Unknown",
       };
     });
   } catch (error) {
-    console.error("Error getting visit:", error);
-    throw new Error("Failed to get completed visit");
+    console.error("Error getting completed visits:", error);
+    throw new Error("Failed to retrieve completed visits");
   }
 }
 

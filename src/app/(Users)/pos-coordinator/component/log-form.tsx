@@ -71,14 +71,21 @@ export default function LogForm({
       } else {
         console.log("No check-in found for this ID.");
       }
-
       updateSchedule(
         {
           checkIndate: checkInDate?.checkInTime || "",
           checkOutdate: checkOutDate,
           id: schedule.id,
           status: "COMPLETED",
-          issues: values?.issues?.map((id) => ({ id })) || [],
+          issues:
+            values.issues?.map((id) => ({
+              issueId: id,
+              description:
+                issues?.find((issue) => issue.id === id)?.description ??
+                "No description provided",
+              status: "NOT_SOLVED",
+            })) || [],
+
           notes: values.visit_report,
         },
         {

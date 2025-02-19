@@ -1,5 +1,5 @@
 import { queryClient } from "@/app/config/all-provider";
-import { getAllIssues, getAllVisitIssues } from "@/app/server/issues";
+import { getAllIssues, getAllVisitIssues, updateIssueStatus } from "@/app/server/issues";
 import { getAllPartners } from "@/app/server/partners";
 import {
   createVisitor,
@@ -151,3 +151,30 @@ export const useCreateVisitor = () => {
     },
   });
 };
+
+
+
+///update issue status
+
+export const useUpdateIssuesStatus = () => {
+  return useMutation({
+    mutationFn: async ({
+      issueId,
+      status,
+      visitId,
+    }: {
+      issueId: string;
+      status:"SOLVED" | "NOT_SOLVED";
+      visitId: string;
+    }) => {
+      const data = await updateIssueStatus({ issueId, status, visitId });
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["issues"] });
+    },
+    onError: (error) => {
+      console.error("Error updating issue status:", error);
+    },
+  })
+}

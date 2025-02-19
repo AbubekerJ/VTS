@@ -29,7 +29,7 @@ export const useSubmitVisitLogs = () => {
     }: {
       id: string;
       status: VisitStatus;
-      issues: { id: string }[];
+      issues: { issueId: string; description: string; status: string }[];
       checkOutdate: string;
       checkIndate: string;
       notes: string;
