@@ -130,11 +130,12 @@ export function IssueTable() {
     console.log("error................................................");
   }
 
-
-
   const data: IssueType[] = issues ? issues : [];
 
-  console.log('data..............payload ........................................',data)
+  console.log(
+    "data..............payload ........................................",
+    data
+  );
 
   const [rowSelection, setRowSelection] = React.useState({});
 
@@ -156,7 +157,7 @@ export function IssueTable() {
   });
 
   return (
-    <div className="lg:w-[80%] lg:mx-auto">
+    <div className="lg:w-[95%] lg:mx-auto">
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter Partners..."
@@ -218,10 +219,6 @@ export function IssueTable() {
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
         <div className="space-x-2">
           <Button
             variant="outline"

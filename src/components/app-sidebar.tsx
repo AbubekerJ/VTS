@@ -19,7 +19,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import SidebarLogo from "./sidebar-logo";
-import { NavProjects } from "./nav-projects";
+import { NavMain } from "./nav-main";
 
 type Role = "POS_COORDINATOR" | "IDC_MANAGER";
 
@@ -84,8 +84,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <SidebarLogo />
       </SidebarHeader>
-      <SidebarContent className="mt-11">
-        <NavProjects dashboard={filteredDashboards} />
+      <SidebarContent className="mt-11 ">
+        <NavMain dashboard={filteredDashboards} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

@@ -91,7 +91,7 @@ export const columns: ColumnDef<ScheduleType>[] = [
 
     cell: ({ row }) => {
       const date = new Date(row.getValue("date"));
-      const formattedDate = format(date, "dd-MM-yyyy");
+      const formattedDate = format(date, "dd-MM-yyyy/ hh:mm ");
 
       return <div className="capitalize">{formattedDate}</div>;
     },
@@ -181,7 +181,7 @@ export function ScheduleTable() {
   });
 
   return (
-    <div className="lg:w-[80%] lg:mx-auto">
+    <div className="lg:w-full lg:mx-auto">
       <div className="flex items-center justify-between py-4">
         <Input
           placeholder="Filter Partners..."

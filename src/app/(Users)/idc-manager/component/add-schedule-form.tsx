@@ -241,7 +241,7 @@ export default function AddSchedule({
               name="date"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Submission Date</FormLabel>
+                  <FormLabel>Schedule Date</FormLabel>
                   <DatetimePicker
                     {...field}
                     format={[
@@ -250,7 +250,7 @@ export default function AddSchedule({
                     ]}
                   />
                   <FormDescription>
-                    Add the date of submission with detailly.
+                    Add the date of Schedule Date.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

@@ -102,9 +102,7 @@ export const columns: ColumnDef<Visitor>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onSelect={(e) => e.preventDefault()}
-            ></DropdownMenuItem>
+
             <DropdownMenuItem
               onClick={() =>
                 console.log(
@@ -165,7 +163,7 @@ export function VisitorTable() {
   });
 
   return (
-    <div className="lg:w-[80%] lg:mx-auto">
+    <div className="lg:w-[95%] lg:mx-auto">
       <div className="flex items-center justify-between py-4">
         <Input
           placeholder="Filter Partners..."
