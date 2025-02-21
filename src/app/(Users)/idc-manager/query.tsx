@@ -1,10 +1,7 @@
 import { queryClient } from "@/app/config/all-provider";
 import { getAllIssues, updateIssueStatus } from "@/app/server/issues";
 import { getAllPartners } from "@/app/server/partners";
-import {
-  createVisitor,
-  getVisitorUnderThisManager,
-} from "@/app/server/pos-coordinators";
+import { createVisitor, getVisitorUnderThisManager } from "@/app/server/pos-coordinators";
 import { rescheduleVisit, scheduleVisit } from "@/app/server/visits";
 import { useMutation, useQuery } from "@tanstack/react-query";
 

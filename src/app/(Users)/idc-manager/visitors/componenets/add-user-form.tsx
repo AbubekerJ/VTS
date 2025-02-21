@@ -20,7 +20,7 @@ import { Input } from "@/components/ui/input";
 
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { DialogTitle } from "@radix-ui/react-dialog";
-import { useCreateVisitor } from "../query";
+import { useCreateVisitor } from "../../query";
 import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({

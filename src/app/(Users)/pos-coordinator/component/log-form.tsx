@@ -19,7 +19,7 @@ import { DialogTitle } from "@radix-ui/react-dialog";
 
 import { Textarea } from "@/components/ui/textarea";
 
-import { ScheduleType } from "../table";
+import { PosCoordinatorTableProps } from "./pos-coordinator-table-column";
 import { useGetAllIssues } from "../../idc-manager/query";
 // import { useCheckInTime } from "../context/check-in-time-context";
 import { MultiSelect } from "./multi-select";
@@ -39,7 +39,7 @@ export default function LogForm({
 }: {
   open: boolean;
   onClose: () => void;
-  schedule: ScheduleType;
+  schedule: PosCoordinatorTableProps;
 }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

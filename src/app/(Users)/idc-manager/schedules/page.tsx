@@ -12,7 +12,6 @@ import { Separator } from "@/components/ui/separator";
 const page = () => {
   return (
     <div className=" mx-auto my-10">
-      <div></div>
       <Card className="mx-auto w-[90%] mt-5">
         <CardHeader className="gap-4">
           <CardTitle>Visit Schedule</CardTitle>
@@ -22,7 +21,10 @@ const page = () => {
           </CardDescription>
         </CardHeader>
         <Separator className="my-4" />
-        <CardContent> {<ScheduleController />}</CardContent>
+        <CardContent>
+          {" "}
+          <ScheduleController />
+        </CardContent>
       </Card>
     </div>
   );

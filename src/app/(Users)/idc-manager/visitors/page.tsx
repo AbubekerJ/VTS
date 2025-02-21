@@ -1,5 +1,5 @@
 import React from "react";
-import { VisitorTable } from "./visitor-table";
+import { VisitorController } from "./visitor-controller";
 import {
   Card,
   CardContent,
@@ -19,7 +19,7 @@ const page = () => {
         </CardDescription>
       </CardHeader>
       <Separator className="my-4" />
-      <CardContent> {<VisitorTable />}</CardContent>
+      <CardContent> {<VisitorController />}</CardContent>
     </Card>
   );
 };

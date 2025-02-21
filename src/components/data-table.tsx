@@ -6,6 +6,7 @@ import {
   ColumnDef,
   ColumnFiltersState,
   SortingState,
+  VisibilityState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -26,6 +27,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useQuery } from "@tanstack/react-query";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { ChevronDown } from "lucide-react";
 
 export function DataTable<T>({
   columns,
@@ -34,6 +42,7 @@ export function DataTable<T>({
   datePicker,
   filterColumnId,
   queryKey,
+  columnVisibilityFunctionality,
 }: {
   columns: ColumnDef<T>[];
   dataProvider: (params: any) => void;
@@ -41,12 +50,14 @@ export function DataTable<T>({
   datePicker?: React.ReactNode;
   filterColumnId?: string;
   queryKey?: string;
+  columnVisibilityFunctionality?: boolean;
 }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({});
   const { data, isLoading, isError } = useQuery({
     queryKey: [queryKey, externalParams],
     queryFn: () => {
@@ -75,10 +86,12 @@ export function DataTable<T>({
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onRowSelectionChange: setRowSelection,
+    onColumnVisibilityChange: setColumnVisibility,
     state: {
       sorting,
       columnFilters,
       rowSelection,
+      columnVisibility,
     },
   });
 
@@ -91,7 +104,7 @@ export function DataTable<T>({
   return (
     <div className="lg:w-[95%] lg:mx-auto">
       <div className="flex items-center justify-between">
-        <div className="flex items-center py-4">
+        <div className="flex items-center py-4 gap-2">
           {filterColumnId && (
             <Input
               placeholder={`Filter ${filterColumnId ?? ""}...`}
@@ -107,6 +120,34 @@ export function DataTable<T>({
               }
               className="max-w-sm"
             />
+          )}
+          {columnVisibilityFunctionality && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="ml-auto">
+                  Columns <ChevronDown />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {table
+                  .getAllColumns()
+                  .filter((column) => column.getCanHide())
+                  .map((column) => {
+                    return (
+                      <DropdownMenuCheckboxItem
+                        key={column.id}
+                        className="capitalize"
+                        checked={column.getIsVisible()}
+                        onCheckedChange={(value) =>
+                          column.toggleVisibility(!!value)
+                        }
+                      >
+                        {column.id}
+                      </DropdownMenuCheckboxItem>
+                    );
+                  })}
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
         </div>
         {datePicker && datePicker}
