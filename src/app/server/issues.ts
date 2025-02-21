@@ -1,6 +1,7 @@
 "use server";
 import { prisma } from "@/lib/prisma";
 import { getAuthSession } from "../config/auth-options";
+import { DateRange } from "react-day-picker";
 
 // Get all issues
 export async function getAllIssues() {
@@ -13,9 +14,25 @@ export async function getAllIssues() {
   }
 }
 
-export async function getAllVisitIssues() {
+export async function getAllVisitIssues(
+  selectedDateRange: DateRange | undefined
+) {
+  const params = selectedDateRange
+    ? {
+        startDate: selectedDateRange.from
+          ? selectedDateRange.from.toISOString().split("T")[0]
+          : undefined,
+        endDate: selectedDateRange.to
+          ? selectedDateRange.to.toISOString().split("T")[0]
+          : undefined,
+      }
+    : {};
   try {
     const session = await getAuthSession();
+    console.log(
+      "slected date in the server action................................",
+      params
+    );
 
     const visits = await prisma.visit.findMany({
       where: {

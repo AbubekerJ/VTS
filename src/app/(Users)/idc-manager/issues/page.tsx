@@ -1,5 +1,6 @@
+"use client";
 import React from "react";
-import { IssueTable } from "./issue-table";
+import { IssueController } from "./issue-controller";
 import {
   Card,
   CardContent,
@@ -20,7 +21,7 @@ const page = () => {
           </CardDescription>
         </CardHeader>
         <Separator className="my-4" />
-        <CardContent>{<IssueTable />}</CardContent>
+        <CardContent>{<IssueController />}</CardContent>
       </Card>
     </div>
   );

@@ -1,6 +1,5 @@
 import React from "react";
-import { ScheduleTable } from "./schedule-table";
-// import ScheduleCards from "./cards";
+import { ScheduleController } from "./schedule-controller"; // import ScheduleCards from "./cards";
 import {
   Card,
   CardContent,
@@ -13,9 +12,6 @@ import { Separator } from "@/components/ui/separator";
 const page = () => {
   return (
     <div className=" mx-auto my-10">
-      {/* <div className="mb-10">
-        <ScheduleCards />
-      </div> */}
       <div></div>
       <Card className="mx-auto w-[90%] mt-5">
         <CardHeader className="gap-4">
@@ -26,7 +22,7 @@ const page = () => {
           </CardDescription>
         </CardHeader>
         <Separator className="my-4" />
-        <CardContent> {<ScheduleTable />}</CardContent>
+        <CardContent> {<ScheduleController />}</CardContent>
       </Card>
     </div>
   );

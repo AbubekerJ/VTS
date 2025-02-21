@@ -1,15 +1,11 @@
 import { queryClient } from "@/app/config/all-provider";
-import { getAllIssues, getAllVisitIssues, updateIssueStatus } from "@/app/server/issues";
+import { getAllIssues, updateIssueStatus } from "@/app/server/issues";
 import { getAllPartners } from "@/app/server/partners";
 import {
   createVisitor,
   getVisitorUnderThisManager,
 } from "@/app/server/pos-coordinators";
-import {
-  getScheduledVisit,
-  rescheduleVisit,
-  scheduleVisit,
-} from "@/app/server/visits";
+import { rescheduleVisit, scheduleVisit } from "@/app/server/visits";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const useGetAllVisitorUnderThisManager = () => {
@@ -37,26 +33,39 @@ export const useGetAllIssues = () => {
   });
 };
 
-export const useGetAllVisitIssues = () => {
-  return useQuery({
-    queryKey: ["issues"],
-    queryFn: async () => {
-      const data = await getAllVisitIssues();
+// export const useGetAllVisitIssues = (
+//   selectedDateRange?: DateRange | undefined,
+//   enabled = false
+// ) => {
+//   return useQuery({
+//     queryKey: ["issues", selectedDateRange],
+//     enabled,
+//     queryFn: async () => {
+//       const params = selectedDateRange
+//         ? {
+//             startDate: selectedDateRange.from
+//               ? selectedDateRange.from.toISOString().split("T")[0]
+//               : undefined,
+//             endDate: selectedDateRange.to
+//               ? selectedDateRange.to.toISOString().split("T")[0]
+//               : undefined,
+//           }
+//         : {};
+//       const data = await getAllVisitIssues(params);
+//       return data;
+//     },
+//   });
+// };
 
-      return data;
-    },
-  });
-};
-
-export const useGetScheduledVisits = () => {
-  return useQuery({
-    queryKey: ["scheduledVisit"],
-    queryFn: async () => {
-      const data = await getScheduledVisit();
-      return data;
-    },
-  });
-};
+// export const useGetScheduledVisits = () => {
+//   return useQuery({
+//     queryKey: ["scheduledVisit"],
+//     queryFn: async () => {
+//       const data = await getScheduledVisit();
+//       return data;
+//     },
+//   });
+// };
 
 //reschedule visit
 
@@ -152,8 +161,6 @@ export const useCreateVisitor = () => {
   });
 };
 
-
-
 ///update issue status
 
 export const useUpdateIssuesStatus = () => {
@@ -164,7 +171,7 @@ export const useUpdateIssuesStatus = () => {
       visitId,
     }: {
       issueId: string;
-      status:"SOLVED" | "NOT_SOLVED";
+      status: "SOLVED" | "NOT_SOLVED";
       visitId: string;
     }) => {
       const data = await updateIssueStatus({ issueId, status, visitId });
@@ -176,5 +183,5 @@ export const useUpdateIssuesStatus = () => {
     onError: (error) => {
       console.error("Error updating issue status:", error);
     },
-  })
-}
+  });
+};

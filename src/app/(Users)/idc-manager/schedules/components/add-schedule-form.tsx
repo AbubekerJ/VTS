@@ -35,7 +35,7 @@ import {
   useGetAllPartners,
   useGetAllVisitorUnderThisManager,
   useScheduleVisit,
-} from "../query";
+} from "../../query";
 import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
@@ -74,7 +74,7 @@ export default function AddSchedule({
         {
           onSuccess: () => {
             toast({
-              description: "Scheduled Added",
+              title: "Schedule Added",
             });
             onClose();
             console.log("schedule success");
@@ -87,8 +87,8 @@ export default function AddSchedule({
     } catch (error) {
       console.error("Form submission error", error);
       toast({
-        title: "Scheduled Added field ",
-        description: "Scheduled Added field ",
+        title: "Scheduled Added failed ",
+        description: "Scheduled Added failed ",
       });
     }
   }

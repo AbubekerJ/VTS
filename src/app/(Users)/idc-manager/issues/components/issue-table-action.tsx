@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useUpdateIssuesStatus } from "../query";
+import { useUpdateIssuesStatus } from "../../query";
 import { useToast } from "@/hooks/use-toast";
 
 interface Issue {
