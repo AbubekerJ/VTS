@@ -5,9 +5,11 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 export function VisitLogModal({
   open,
   onClose,
+  visitLog,
 }: {
   open: boolean;
   onClose: () => void;
+  visitLog: string;
 }) {
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -16,7 +18,7 @@ export function VisitLogModal({
         <h1 className="p-2 bg-gray-200 w-max rounded">Visit Log</h1>
         <Card className="w-full mt-5">
           <CardContent className="max-h-[400px] overflow-y-scroll p-4">
-            There are many variations
+            {visitLog}
           </CardContent>
         </Card>
       </DialogContent>

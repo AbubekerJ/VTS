@@ -14,30 +14,41 @@ export async function getAllIssues() {
   }
 }
 
+import { endOfDay } from "date-fns";
+
 export async function getAllVisitIssues(
   selectedDateRange: DateRange | undefined
 ) {
-  const params = selectedDateRange
+  let startDate: string | undefined;
+  let endDate: string | undefined;
+
+  if (selectedDateRange?.from) {
+    startDate = selectedDateRange.from.toISOString();
+    endDate = selectedDateRange.to
+      ? selectedDateRange.to.toISOString()
+      : endOfDay(selectedDateRange.from).toISOString();
+  }
+
+  const dateFilters = startDate
     ? {
-        startDate: selectedDateRange.from
-          ? selectedDateRange.from.toISOString().split("T")[0]
-          : undefined,
-        endDate: selectedDateRange.to
-          ? selectedDateRange.to.toISOString().split("T")[0]
-          : undefined,
+        checkInDate: {
+          gte: startDate,
+          lte: endDate,
+        },
       }
     : {};
   try {
     const session = await getAuthSession();
-    console.log(
-      "slected date in the server action................................",
-      params
-    );
+    console.log("Selected date range in the server action:", {
+      startDate,
+      endDate,
+    });
 
     const visits = await prisma.visit.findMany({
       where: {
         scheduledById: session?.user.id,
         status: "COMPLETED",
+        ...(dateFilters && dateFilters),
       },
       orderBy: {
         checkInDate: "desc",
@@ -48,18 +59,16 @@ export async function getAllVisitIssues(
       },
     });
 
-    // Flatten the visit issues into the desired format
     const visitIssues = visits.flatMap((visit) => {
-      // Parse the VisitIssue JSON field (if it exists)
       const issues =
         typeof visit.VisitIssue === "string"
           ? JSON.parse(visit.VisitIssue)
           : [];
 
-      // Map each issue to the desired format
       return issues.map(
         (issue: { issueId: string; description: string; status: string }) => ({
           visitId: visit.id,
+          visitLog: visit.notes,
           issueId: issue.issueId,
           partner: visit.partner.name,
           issue: issue.description,
@@ -72,7 +81,12 @@ export async function getAllVisitIssues(
 
     return visitIssues;
   } catch (error) {
-    console.log(error);
+    // Check if the error is an instance of Error before logging
+    if (error instanceof Error) {
+      console.error("Error getting visit issues:", error.message);
+    } else {
+      console.error("Unknown error occurred:", error);
+    }
     throw new Error("Error getting visit issues");
   }
 }

@@ -16,6 +16,7 @@ import { VisitLogModal } from "./visit-log-card";
 interface Issue {
   issueId: string;
   visitId: string;
+  visitLog: string;
 }
 
 const IssueTableAction = ({ issue }: { issue: Issue }) => {
@@ -50,7 +51,6 @@ const IssueTableAction = ({ issue }: { issue: Issue }) => {
     setShowLog(false);
   };
 
-  console.log("issueee..................................", issue);
   return (
     <>
       <DropdownMenu>
@@ -82,7 +82,11 @@ const IssueTableAction = ({ issue }: { issue: Issue }) => {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <VisitLogModal open={showLog} onClose={handleHideLog} />
+      <VisitLogModal
+        open={showLog}
+        onClose={handleHideLog}
+        visitLog={issue.visitLog}
+      />
     </>
   );
 };

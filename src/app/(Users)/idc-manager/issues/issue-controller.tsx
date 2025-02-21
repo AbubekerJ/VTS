@@ -9,6 +9,7 @@ import { useState } from "react";
 
 export type IssueType = {
   visitId: string;
+  visitLog: string;
   issueId: string;
   createdBy: string;
   partner: string;
