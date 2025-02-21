@@ -17,6 +17,7 @@ interface Issue {
   issueId: string;
   visitId: string;
   visitLog: string;
+  status: string; // Include the status property
 }
 
 const IssueTableAction = ({ issue }: { issue: Issue }) => {
@@ -63,22 +64,26 @@ const IssueTableAction = ({ issue }: { issue: Issue }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuItem onClick={handleShowLog}>
-            <p className="capitalize  cursor-pointer ">View Logs</p>
+            <p className="capitalize cursor-pointer">View Logs</p>
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() =>
-              updateIssueStatus(issue.issueId, issue.visitId, "SOLVED")
-            }
-          >
-            <p className="capitalize  cursor-pointer ">Solved</p>
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() =>
-              updateIssueStatus(issue.issueId, issue.visitId, "NOT_SOLVED")
-            }
-          >
-            <p className="capitalize  cursor-pointer  ">Not Solved</p>
-          </DropdownMenuItem>
+          {issue.status !== "No issues found" && ( // Conditional rendering
+            <>
+              <DropdownMenuItem
+                onClick={() =>
+                  updateIssueStatus(issue.issueId, issue.visitId, "SOLVED")
+                }
+              >
+                <p className="capitalize cursor-pointer">Solved</p>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() =>
+                  updateIssueStatus(issue.issueId, issue.visitId, "NOT_SOLVED")
+                }
+              >
+                <p className="capitalize cursor-pointer">Not Solved</p>
+              </DropdownMenuItem>
+            </>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
 

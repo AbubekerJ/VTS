@@ -39,19 +39,38 @@ export const columns: ColumnDef<IssueType>[] = [
 
   {
     accessorKey: "issue",
-    header: () => <div className="text-left ">Issue</div>,
-    cell: ({ row }) => (
-      <div className="capitalize  w-max text-destructive p-2 bg-secondary px-4 py-1">
-        {row.getValue("issue")}
-      </div>
-    ),
+    header: () => <div className="text-left">Issue</div>,
+    cell: ({ row }) => {
+      const issue = row.getValue("issue") as string;
+
+      const isNoIssue = issue === "No issues found";
+
+      return (
+        <div
+          className={`capitalize w-max p-2 px-4 py-1 ${
+            isNoIssue
+              ? "text-gray-500 bg-gray-200"
+              : "text-destructive bg-secondary"
+          }`}
+        >
+          {issue}
+        </div>
+      );
+    },
   },
+
   {
     accessorKey: "status",
     header: () => <div className="text-left">Status</div>,
     cell: ({ row }) => {
       const status: string = row.getValue("status");
-      const textColor = status === "SOLVED" ? "text-green-500" : "text-red-500";
+
+      const textColor =
+        status === "SOLVED"
+          ? "text-green-500"
+          : status === "NOT_SOLVED"
+          ? "text-red-500"
+          : "text-gray-500";
 
       return (
         <div className={`capitalize w-max p-2 px-4 py-1  ${textColor}`}>

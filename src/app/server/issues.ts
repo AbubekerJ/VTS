@@ -16,6 +16,7 @@ export async function getAllIssues() {
 
 import { endOfDay } from "date-fns";
 
+///get all visit
 export async function getAllVisitIssues(
   selectedDateRange: DateRange | undefined
 ) {
@@ -64,6 +65,19 @@ export async function getAllVisitIssues(
         typeof visit.VisitIssue === "string"
           ? JSON.parse(visit.VisitIssue)
           : [];
+
+      if (issues.length === 0) {
+        return {
+          visitId: visit.id,
+          visitLog: visit.notes,
+          issueId: null, // No issue ID since there are no issues
+          partner: visit.partner.name,
+          issue: "No issues found", // Indicate that no issues are present
+          createdDate: visit.createdAt,
+          createdBy: visit.coordinator.name,
+          status: "No issues found", // Indicate that there are no issues
+        };
+      }
 
       return issues.map(
         (issue: { issueId: string; description: string; status: string }) => ({
