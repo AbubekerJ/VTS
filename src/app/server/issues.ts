@@ -81,12 +81,7 @@ export async function getAllVisitIssues(
 
     return visitIssues;
   } catch (error) {
-    // Check if the error is an instance of Error before logging
-    if (error instanceof Error) {
-      console.error("Error getting visit issues:", error.message);
-    } else {
-      console.error("Unknown error occurred:", error);
-    }
+    console.log(error);
     throw new Error("Error getting visit issues");
   }
 }
