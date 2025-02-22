@@ -34,6 +34,8 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
+import { DataTableToolbar } from "./data-table-tool-bar";
+import { DataTablePagination } from "./data-table-pagination";
 
 export function DataTable<T>({
   columns,
@@ -43,6 +45,7 @@ export function DataTable<T>({
   filterColumnId,
   queryKey,
   columnVisibilityFunctionality,
+  facetedFilter
 }: {
   columns: ColumnDef<T>[];
   dataProvider: (params: any) => void;
@@ -51,6 +54,7 @@ export function DataTable<T>({
   filterColumnId?: string;
   queryKey?: string;
   columnVisibilityFunctionality?: boolean;
+  facetedFilter?:boolean
 }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -121,6 +125,7 @@ export function DataTable<T>({
               className="max-w-sm"
             />
           )}
+          {facetedFilter && <DataTableToolbar table={table} />}
           {columnVisibilityFunctionality && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -203,26 +208,10 @@ export function DataTable<T>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
-        </div>
+      <div className="mt-4">
+      <DataTablePagination table={table}/>
       </div>
+      
     </div>
   );
 }

@@ -5,22 +5,15 @@ import { ArrowUpDown } from "lucide-react";
 import IssueTableAction from "./issue-table-action";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
+import { DataTableColumnHeader } from "@/components/data-table-column-header";
 
 export const columns: ColumnDef<IssueType>[] = [
   {
     accessorKey: "partner",
     header: ({ column }) => {
       return (
-        <div className=" ">
-          <Button
-            variant="ghost"
-            className="pl-0"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Partner Name
-            <ArrowUpDown />
-          </Button>
-        </div>
+        <DataTableColumnHeader column={column} title="partner" />
+
       );
     },
     cell: ({ row }) => (
@@ -61,7 +54,11 @@ export const columns: ColumnDef<IssueType>[] = [
 
   {
     accessorKey: "status",
-    header: () => <div className="text-left">Status</div>,
+    header: ({column}) => {
+      return (
+        <DataTableColumnHeader column={column} title="status" />
+      )
+    },
     cell: ({ row }) => {
       const status: string = row.getValue("status");
 

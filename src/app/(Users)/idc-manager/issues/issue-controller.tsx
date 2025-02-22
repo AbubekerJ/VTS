@@ -30,6 +30,7 @@ export function IssueController() {
       datePicker={<DatePickerWithRange setSelectedDate={setSelectedDate} />}
       filterColumnId="partner"
       queryKey="issues"
+      facetedFilter={true}
     />
   );
 }
