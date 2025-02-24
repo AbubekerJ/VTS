@@ -1,6 +1,5 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
 import {
   Bar,
   BarChart,
@@ -24,6 +23,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { useGetAllVisitCounts } from "../../query";
+import { DateRange } from "react-day-picker";
 
 const chartConfig = {
   count: {
@@ -36,8 +36,8 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function IssueChart() {
-  const { data: allIssuesCount } = useGetAllVisitCounts();
+export function IssueChart({ selectedDate}:{selectedDate:DateRange|undefined}) {
+  const { data: allIssuesCount } = useGetAllVisitCounts(selectedDate);
 
   console.log("Fetched Issues Count:", allIssuesCount);
   const chartData = allIssuesCount ?? [];
@@ -96,11 +96,8 @@ export function IssueChart() {
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this issueName <TrendingUp className="h-4 w-4" />
-        </div>
         <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
+          An overview of the frequency and types of visit issues encountered
         </div>
       </CardFooter>
     </Card>

@@ -221,26 +221,25 @@ export const useGetNotSolvedIssueCount = (
   });
 };
 
-
-/// get all visit issues count 
-export const useGetAllVisitCounts =()=>{
+/// get all visit issues count
+export const useGetAllVisitCounts = (selectedDate: DateRange | undefined) => {
   return useQuery({
-    queryKey:['allIssuesCount'],
-    queryFn:async()=>{
-      const data = await getAllVisitIssuesCount()
-      return data
-    }
-  })
-}
+    queryKey: ["allIssuesCount", selectedDate],
+    queryFn: async () => {
+      const data = await getAllVisitIssuesCount(selectedDate);
+      return data;
+    },
+  });
+};
 
-//get top 5 visitors 
+//get top 5 visitors
 
-export const useGetTop5Visitors =()=>{
+export const useGetTop5Visitors = (selectedDate: DateRange | undefined) => {
   return useQuery({
-    queryKey:['topVisitors'],
-    queryFn:async()=>{
-      const data =await getTop5VisitorsWithMostVisits()
-      return data
-    }
-  })
-}
+    queryKey: ["topVisitors", selectedDate],
+    queryFn: async () => {
+      const data = await getTop5VisitorsWithMostVisits(selectedDate);
+      return data;
+    },
+  });
+};

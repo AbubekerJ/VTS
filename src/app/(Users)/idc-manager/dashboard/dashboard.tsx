@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { DatePickerWithRange } from "./components/date-range-picker";
-import { RecentSales } from "./components/top-visitors";
+import { TopVisitors } from "./components/top-visitors";
 import {
   CalendarCheck,
   CircleCheckBig,
@@ -97,7 +97,7 @@ export default function Dashboard() {
                     <CardTitle>Issues</CardTitle>
                   </CardHeader>
                   <CardContent className="pl-2">
-                    <IssueChart />
+                    <IssueChart selectedDate={selectedDate} />
                   </CardContent>
                 </Card>
                 <Card className="col-span-3">
@@ -106,7 +106,7 @@ export default function Dashboard() {
                     <CardDescription>Top 5 visitors </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <RecentSales />
+                    <TopVisitors selectedDate={selectedDate} />
                   </CardContent>
                 </Card>
               </div>

@@ -3,6 +3,8 @@
 import { prisma } from "@/lib/prisma";
 import { getAuthSession } from "../config/auth-options";
 import bcrypt from "bcryptjs";
+import { DateRange } from "react-day-picker";
+import { getDateFilters } from "@/utils/dateFilter";
 
 export async function getVisitorUnderThisManager() {
   const session = await getAuthSession();
@@ -95,8 +97,11 @@ export async function createVisitor(values: {
 
 ///Dashboard
 
-export async function getTop5VisitorsWithMostVisits() {
+export async function getTop5VisitorsWithMostVisits(
+  selectedDateRange: DateRange | undefined
+) {
   const session = await getAuthSession();
+  const dateFilters = getDateFilters(selectedDateRange);
 
   if (!session?.user?.id) {
     throw new Error(
@@ -122,6 +127,7 @@ export async function getTop5VisitorsWithMostVisits() {
         coordinatorId: {
           in: coordinatorIds,
         },
+        ...(dateFilters && dateFilters),
       },
       _count: {
         coordinatorId: true,

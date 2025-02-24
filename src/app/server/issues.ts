@@ -183,14 +183,16 @@ export async function getNotSolvedIssueCount(
   }
 }
 
-export async function getAllVisitIssuesCount() {
+export async function getAllVisitIssuesCount(
+  selectedDateRange: DateRange | undefined
+) {
   type issueProps = {
     issueId: string;
     description: string;
     status: string;
   };
   const session = await getAuthSession();
-
+  const dateFilters = getDateFilters(selectedDateRange);
   if (!session?.user?.id) {
     throw new Error(
       "Unauthorized: User must be logged in to schedule a visit."
@@ -204,6 +206,7 @@ export async function getAllVisitIssuesCount() {
         VisitIssue: {
           not: Prisma.JsonNull,
         },
+        ...(dateFilters && dateFilters),
       },
       select: {
         VisitIssue: true,

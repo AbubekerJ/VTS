@@ -1,8 +1,13 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useGetTop5Visitors } from "../../query";
+import { DateRange } from "react-day-picker";
 
-export function RecentSales() {
-  const { data: visitors } = useGetTop5Visitors();
+export function TopVisitors({
+  selectedDate,
+}: {
+  selectedDate: DateRange | undefined;
+}) {
+  const { data: visitors } = useGetTop5Visitors(selectedDate);
   return (
     <div className="space-y-8">
       {visitors?.map((visitor) => (
