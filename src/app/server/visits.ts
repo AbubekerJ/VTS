@@ -4,6 +4,9 @@ import { prisma } from "@/lib/prisma";
 
 import { getAuthSession } from "../config/auth-options";
 import { VisitStatus } from "@prisma/client";
+import { getDateFilters } from "@/utils/dateFilter";
+import { DateRange } from "react-day-picker";
+
 export async function getPosCoordinatorVisits() {
   const session = await getAuthSession();
 
@@ -251,6 +254,62 @@ export async function scheduleVisit({
       },
     });
     return response;
+  } catch (error) {
+    console.error("Schedule visit error:", error);
+    throw new Error("Failed to schedule visit: ");
+  }
+}
+
+//////////////////Dashboard
+export async function getCountVisits(selectedDateRange: DateRange | undefined) {
+  try {
+    const session = await getAuthSession();
+
+    if (!session?.user?.id) {
+      throw new Error(
+        "Unauthorized: User must be logged in to schedule a visit."
+      );
+    }
+
+    const dateFilters = getDateFilters(selectedDateRange);
+
+    const [scheduledCount, inProgressCount, completedCount, cancelledCount] =
+      await Promise.all([
+        prisma.visit.count({
+          where: {
+            scheduledById: session.user.id,
+            status: "SCHEDULED",
+            ...(dateFilters && dateFilters),
+          },
+        }),
+        prisma.visit.count({
+          where: {
+            scheduledById: session.user.id,
+            status: "IN_PROGRESS",
+            ...(dateFilters && dateFilters),
+          },
+        }),
+        prisma.visit.count({
+          where: {
+            scheduledById: session.user.id,
+            status: "COMPLETED",
+            ...(dateFilters && dateFilters),
+          },
+        }),
+        prisma.visit.count({
+          where: {
+            scheduledById: session.user.id,
+            status: "CANCELLED",
+            ...(dateFilters && dateFilters),
+          },
+        }),
+      ]);
+    return {
+      scheduled: scheduledCount,
+      inProgress: inProgressCount,
+      completed: completedCount,
+      cancelled: cancelledCount,
+    };
   } catch (error) {
     console.error("Schedule visit error:", error);
     throw new Error("Failed to schedule visit: ");

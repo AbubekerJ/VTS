@@ -1,20 +1,17 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
 import { IssueType } from "../issue-controller";
-import { ArrowUpDown } from "lucide-react";
 import IssueTableAction from "./issue-table-action";
 import { format } from "date-fns";
-import { Button } from "@/components/ui/button";
-import { DataTableColumnHeader } from "@/components/data-table-column-header";
+import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
+import { statuses } from "@/components/data-table/data";
+import { Badge } from "@/components/ui/badge";
 
 export const columns: ColumnDef<IssueType>[] = [
   {
     accessorKey: "partner",
     header: ({ column }) => {
-      return (
-        <DataTableColumnHeader column={column} title="partner" />
-
-      );
+      return <DataTableColumnHeader column={column} title="partner" />;
     },
     cell: ({ row }) => (
       <div className="capitalize bg-secondary w-max rounded py-1 px-4">
@@ -54,26 +51,35 @@ export const columns: ColumnDef<IssueType>[] = [
 
   {
     accessorKey: "status",
-    header: ({column}) => {
-      return (
-        <DataTableColumnHeader column={column} title="status" />
-      )
+    header: ({ column }) => {
+      return <DataTableColumnHeader column={column} title="status" />;
     },
     cell: ({ row }) => {
-      const status: string = row.getValue("status");
+      const status = statuses.find(
+        (status) => status.value === row.getValue("status")
+      );
+
+      if (!status) {
+        return null;
+      }
 
       const textColor =
-        status === "SOLVED"
+        status.value === "SOLVED"
           ? "text-green-500"
-          : status === "NOT_SOLVED"
+          : status.value === "NOT_SOLVED"
           ? "text-red-500"
           : "text-gray-500";
 
       return (
-        <div className={`capitalize w-max p-2 px-4 py-1  ${textColor}`}>
-          {status.replaceAll("_", " ")}
+        <div className={`capitalize w-max p-2 px-4 py-1 ${textColor}`}>
+          <Badge variant={"secondary"} className={`capitalize ${textColor}`}>
+            {status.label}
+          </Badge>
         </div>
       );
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
     },
   },
 

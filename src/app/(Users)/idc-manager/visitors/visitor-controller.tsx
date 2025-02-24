@@ -3,7 +3,7 @@
 import * as React from "react";
 
 import { Button } from "@/components/ui/button";
-import { DataTable } from "@/components/data-table";
+import { DataTable } from "@/components/data-table/data-table";
 import { columns } from "./componenets/visitor-column";
 import { getVisitorUnderThisManager } from "@/app/server/pos-coordinators";
 import AddVisitorForm from "./componenets/add-user-form";

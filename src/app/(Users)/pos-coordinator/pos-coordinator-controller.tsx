@@ -3,7 +3,7 @@
 import * as React from "react";
 
 import { getPosCoordinatorVisits } from "@/app/server/visits";
-import { DataTable } from "@/components/data-table";
+import { DataTable } from "@/components/data-table/data-table";
 import {
   columns,
   PosCoordinatorTableProps,

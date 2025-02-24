@@ -14,36 +14,16 @@ export async function getAllIssues() {
   }
 }
 
-import { endOfDay } from "date-fns";
+import { getDateFilters } from "@/utils/dateFilter";
+import { Prisma } from "@prisma/client";
 
 ///get all visit
 export async function getAllVisitIssues(
   selectedDateRange: DateRange | undefined
 ) {
-  let startDate: string | undefined;
-  let endDate: string | undefined;
-
-  if (selectedDateRange?.from) {
-    startDate = selectedDateRange.from.toISOString();
-    endDate = selectedDateRange.to
-      ? selectedDateRange.to.toISOString()
-      : endOfDay(selectedDateRange.from).toISOString();
-  }
-
-  const dateFilters = startDate
-    ? {
-        checkInDate: {
-          gte: startDate,
-          lte: endDate,
-        },
-      }
-    : {};
+  const dateFilters = getDateFilters(selectedDateRange);
   try {
     const session = await getAuthSession();
-    console.log("Selected date range in the server action:", {
-      startDate,
-      endDate,
-    });
 
     const visits = await prisma.visit.findMany({
       where: {
@@ -70,12 +50,12 @@ export async function getAllVisitIssues(
         return {
           visitId: visit.id,
           visitLog: visit.notes,
-          issueId: null, // No issue ID since there are no issues
+          issueId: null,
           partner: visit.partner.name,
-          issue: "No issues found", // Indicate that no issues are present
+          issue: "No issues found",
           createdDate: visit.createdAt,
           createdBy: visit.coordinator.name,
-          status: "No issues found", // Indicate that there are no issues
+          status: "No issues found",
         };
       }
 
@@ -143,5 +123,119 @@ export async function updateIssueStatus({
   } catch (error) {
     console.log(error);
     throw new Error("Error updating visit issue");
+  }
+}
+
+// Dashboard
+/////////////////////////
+
+//Not solved issuesCount
+
+export async function getNotSolvedIssueCount(
+  selectedDateRange: DateRange | undefined
+) {
+  const session = await getAuthSession();
+
+  if (!session?.user?.id) {
+    throw new Error(
+      "Unauthorized: User must be logged in to schedule a visit."
+    );
+  }
+  const dateFilters = getDateFilters(selectedDateRange);
+
+  try {
+    const visits = await prisma.visit.findMany({
+      where: {
+        scheduledById: session.user.id,
+        ...(dateFilters && dateFilters),
+      },
+      select: {
+        VisitIssue: true,
+      },
+    });
+
+    let notSolvedCount = 0;
+
+    visits.forEach((visit) => {
+      if (visit.VisitIssue) {
+        try {
+          const issues =
+            typeof visit.VisitIssue === "string"
+              ? JSON.parse(visit.VisitIssue)
+              : [];
+          if (Array.isArray(issues)) {
+            issues.forEach((issue) => {
+              if (issue.status === "NOT_SOLVED") {
+                notSolvedCount++;
+              }
+            });
+          }
+        } catch (error) {
+          console.error("Error parsing VisitIssue JSON:", error);
+        }
+      }
+    });
+
+    return notSolvedCount;
+  } catch (error) {
+    console.error("Error fetching visits:", error);
+    throw new Error("Failed to fetch visits: ");
+  }
+}
+
+export async function getAllVisitIssuesCount() {
+  type issueProps = {
+    issueId: string;
+    description: string;
+    status: string;
+  };
+  const session = await getAuthSession();
+
+  if (!session?.user?.id) {
+    throw new Error(
+      "Unauthorized: User must be logged in to schedule a visit."
+    );
+  }
+
+  try {
+    const Visits = await prisma.visit.findMany({
+      where: {
+        scheduledById: session.user.id,
+        VisitIssue: {
+          not: Prisma.JsonNull,
+        },
+      },
+      select: {
+        VisitIssue: true,
+      },
+    });
+
+    // Aggregate issue occurrences
+    const issueCounts: { [key: string]: number } = {};
+
+    Visits.forEach((visit) => {
+      const issues =
+        typeof visit.VisitIssue === "string"
+          ? JSON.parse(visit.VisitIssue)
+          : [];
+      issues.forEach((issue: issueProps) => {
+        const key = issue.description;
+        if (issueCounts[key]) {
+          issueCounts[key]++;
+        } else {
+          issueCounts[key] = 1;
+        }
+      });
+    });
+    const issueArray = Object.entries(issueCounts).map(
+      ([issueName, count]) => ({
+        issueName,
+        count,
+      })
+    );
+    return issueArray;
+  } catch (error) {
+    console.error("Error fetching all issues:", error);
+    throw new Error("Failed to fetch issues: ");
   }
 }

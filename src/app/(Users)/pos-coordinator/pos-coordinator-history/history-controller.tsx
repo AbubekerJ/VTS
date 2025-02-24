@@ -2,11 +2,12 @@
 
 import * as React from "react";
 
-
-
-import { DataTable } from "@/components/data-table";
+import { DataTable } from "@/components/data-table/data-table";
 import { getCompletedVisits } from "@/app/server/visits";
-import { columns, ScheduleType } from "./components/pos-coordinator-history-column";
+import {
+  columns,
+  ScheduleType,
+} from "./components/pos-coordinator-history-column";
 
 export function PosCoordinatorSchedulesHistory() {
   return (

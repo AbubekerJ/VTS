@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 
-import { NavUser } from "@/components/nav-user";
+import { NavUser } from "@/components/sidebar/nav-user";
 import {
   Sidebar,
   SidebarContent,

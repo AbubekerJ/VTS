@@ -60,8 +60,6 @@ export async function getVisitorUnderThisManager() {
   }
 }
 
-
-
 //////////////////// create visitor
 export async function createVisitor(values: {
   name: string;
@@ -92,5 +90,73 @@ export async function createVisitor(values: {
   } catch (error) {
     console.error("Error creating visitor:", error);
     throw new Error("Failed to create visitor");
+  }
+}
+
+///Dashboard
+
+export async function getTop5VisitorsWithMostVisits() {
+  const session = await getAuthSession();
+
+  if (!session?.user?.id) {
+    throw new Error(
+      "Unauthorized: User must be logged in to schedule a visit."
+    );
+  }
+
+  try {
+    const coordinators = await prisma.user.findMany({
+      where: {
+        managerId: session.user.id,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    const coordinatorIds = coordinators.map((coordinator) => coordinator.id);
+
+    const visitors = await prisma.visit.groupBy({
+      by: ["coordinatorId"],
+      where: {
+        coordinatorId: {
+          in: coordinatorIds,
+        },
+      },
+      _count: {
+        coordinatorId: true,
+      },
+      orderBy: {
+        _count: {
+          coordinatorId: "desc",
+        },
+      },
+      take: 5,
+    });
+
+    // Step 4: Fetch visitor details
+    const visitorDetails = await Promise.all(
+      visitors.map(async (visitor) => {
+        const coordinator = await prisma.user.findUnique({
+          where: {
+            id: visitor.coordinatorId,
+          },
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        });
+        return {
+          coordinator,
+          visitCount: visitor._count.coordinatorId,
+        };
+      })
+    );
+
+    return visitorDetails;
+  } catch (error) {
+    console.error("Error getting visitor information:", error);
+    throw new Error("Failed getting visitor information");
   }
 }

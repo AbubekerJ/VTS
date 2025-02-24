@@ -1,9 +1,23 @@
 import { queryClient } from "@/app/config/all-provider";
-import { getAllIssues, updateIssueStatus } from "@/app/server/issues";
+import {
+  getAllIssues,
+  getAllVisitIssuesCount,
+  getNotSolvedIssueCount,
+  updateIssueStatus,
+} from "@/app/server/issues";
 import { getAllPartners } from "@/app/server/partners";
-import { createVisitor, getVisitorUnderThisManager } from "@/app/server/pos-coordinators";
-import { rescheduleVisit, scheduleVisit } from "@/app/server/visits";
+import {
+  createVisitor,
+  getTop5VisitorsWithMostVisits,
+  getVisitorUnderThisManager,
+} from "@/app/server/pos-coordinators";
+import {
+  getCountVisits,
+  rescheduleVisit,
+  scheduleVisit,
+} from "@/app/server/visits";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { DateRange } from "react-day-picker";
 
 export const useGetAllVisitorUnderThisManager = () => {
   return useQuery({
@@ -182,3 +196,51 @@ export const useUpdateIssuesStatus = () => {
     },
   });
 };
+
+////Dashboard
+
+export const useGetVisitCounts = (selectedDate: DateRange | undefined) => {
+  return useQuery({
+    queryKey: ["visitCount", selectedDate],
+    queryFn: async () => {
+      const data = await getCountVisits(selectedDate);
+      return data;
+    },
+  });
+};
+
+export const useGetNotSolvedIssueCount = (
+  selectedDate: DateRange | undefined
+) => {
+  return useQuery({
+    queryKey: ["NotSolvedIssueCount", selectedDate],
+    queryFn: async () => {
+      const data = await getNotSolvedIssueCount(selectedDate);
+      return data;
+    },
+  });
+};
+
+
+/// get all visit issues count 
+export const useGetAllVisitCounts =()=>{
+  return useQuery({
+    queryKey:['allIssuesCount'],
+    queryFn:async()=>{
+      const data = await getAllVisitIssuesCount()
+      return data
+    }
+  })
+}
+
+//get top 5 visitors 
+
+export const useGetTop5Visitors =()=>{
+  return useQuery({
+    queryKey:['topVisitors'],
+    queryFn:async()=>{
+      const data =await getTop5VisitorsWithMostVisits()
+      return data
+    }
+  })
+}

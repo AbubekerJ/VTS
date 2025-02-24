@@ -3,7 +3,7 @@
 import * as React from "react";
 
 import { columns } from "./components/schedule-column";
-import { DataTable } from "@/components/data-table";
+import { DataTable } from "@/components/data-table/data-table";
 import { getScheduledVisit } from "@/app/server/visits";
 import { Button } from "@/components/ui/button";
 import AddSchedule from "./components/add-schedule-form";

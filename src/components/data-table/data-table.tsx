@@ -32,8 +32,8 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import { ChevronDown } from "lucide-react";
+} from "../ui/dropdown-menu";
+import { ChevronDown, File } from "lucide-react";
 import { DataTableToolbar } from "./data-table-tool-bar";
 import { DataTablePagination } from "./data-table-pagination";
 
@@ -45,7 +45,8 @@ export function DataTable<T>({
   filterColumnId,
   queryKey,
   columnVisibilityFunctionality,
-  facetedFilter
+  facetedFilter,
+  onExport,
 }: {
   columns: ColumnDef<T>[];
   dataProvider: (params: any) => void;
@@ -54,7 +55,8 @@ export function DataTable<T>({
   filterColumnId?: string;
   queryKey?: string;
   columnVisibilityFunctionality?: boolean;
-  facetedFilter?:boolean
+  facetedFilter?: boolean;
+  onExport?: () => Promise<void>;
 }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -124,6 +126,14 @@ export function DataTable<T>({
               }
               className="max-w-sm"
             />
+          )}
+          {onExport && (
+            <Button variant="outline" onClick={onExport}>
+              <div className="flex gap-1 items-center">
+                <File />
+                Export
+              </div>
+            </Button>
           )}
           {facetedFilter && <DataTableToolbar table={table} />}
           {columnVisibilityFunctionality && (
@@ -209,9 +219,8 @@ export function DataTable<T>({
         </Table>
       </div>
       <div className="mt-4">
-      <DataTablePagination table={table}/>
+        <DataTablePagination table={table} />
       </div>
-      
     </div>
   );
 }
