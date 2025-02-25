@@ -93,10 +93,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                       } else {
                         selectedValues.add(option.value);
                       }
-                      console.log(
-                        "Selected Values.....................................:",
-                        Array.from(selectedValues)
-                      ); // Debugging log
+
                       const filterValues = Array.from(selectedValues);
                       column?.setFilterValue(
                         filterValues.length ? filterValues : undefined

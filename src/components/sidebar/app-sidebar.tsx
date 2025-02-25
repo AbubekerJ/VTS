@@ -5,8 +5,8 @@ import {
   UsersRound,
   LayoutDashboard,
   CalendarCheck2,
-  Bug,
   FileClock,
+  NotebookPen,
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 
@@ -25,7 +25,7 @@ type Role = "POS_COORDINATOR" | "IDC_MANAGER";
 
 const rolePermissions: Record<Role, string[]> = {
   POS_COORDINATOR: ["Schedule", "History"],
-  IDC_MANAGER: ["Dashboard", "Schedule", "Visitor", "Issues Reported"],
+  IDC_MANAGER: ["Dashboard", "Schedule", "Visitor", "Reports"],
 };
 
 // Full data
@@ -51,9 +51,9 @@ const data = {
       icon: UsersRound,
     },
     {
-      name: "Issues Reported",
+      name: "Reports",
       url: "/idc-manager/issues",
-      icon: Bug,
+      icon: NotebookPen,
     },
     {
       name: "History",
@@ -81,10 +81,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
+      <SidebarHeader className="mt-3">
         <SidebarLogo />
       </SidebarHeader>
-      <SidebarContent className="mt-11 ">
+      <SidebarContent className="my-6 md:mt-11">
         <NavMain dashboard={filteredDashboards} />
       </SidebarContent>
       <SidebarFooter>

@@ -165,7 +165,7 @@ export function DataTable<T>({
             </DropdownMenu>
           )}
         </div>
-        {datePicker && datePicker}
+        <div className="hidden md:block">{datePicker && datePicker}</div>
       </div>
 
       <div className="rounded-md border">

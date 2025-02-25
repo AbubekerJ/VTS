@@ -36,7 +36,11 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function IssueChart({ selectedDate}:{selectedDate:DateRange|undefined}) {
+export function IssueChart({
+  selectedDate,
+}: {
+  selectedDate: DateRange | undefined;
+}) {
   const { data: allIssuesCount } = useGetAllVisitCounts(selectedDate);
 
   console.log("Fetched Issues Count:", allIssuesCount);
@@ -76,6 +80,7 @@ export function IssueChart({ selectedDate}:{selectedDate:DateRange|undefined}) {
               layout="vertical"
               fill="var(--color-count)"
               radius={4}
+              barSize={40}
             >
               <LabelList
                 dataKey="issueName"

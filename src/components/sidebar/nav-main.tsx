@@ -19,14 +19,14 @@ export function NavMain({
   }[];
 }) {
   return (
-    <SidebarGroup className="my-0 py-0  ">
+    <SidebarGroup className="my-0 py-0 ">
       <SidebarMenu>
         {dashboard.map((item) => (
-          <SidebarMenuItem key={item.name} className="mt-2 ">
+          <SidebarMenuItem key={item.name} className="mt-2  ">
             <SidebarMenuButton asChild>
               <a href={item.url}>
-                <item.icon />
-                <span>{item.name}</span>
+                <item.icon className="text-primary text-lg" />
+                <span className="text-lg">{item.name}</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
