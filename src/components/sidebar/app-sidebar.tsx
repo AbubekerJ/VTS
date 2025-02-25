@@ -7,6 +7,7 @@ import {
   CalendarCheck2,
   FileClock,
   NotebookPen,
+  Store,
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 
@@ -25,7 +26,7 @@ type Role = "POS_COORDINATOR" | "IDC_MANAGER" | "DIRECTOR";
 
 const rolePermissions: Record<Role, string[]> = {
   POS_COORDINATOR: ["Schedule", "History"],
-  IDC_MANAGER: ["Dashboard", "Schedule", "Visitor", "Reports"],
+  IDC_MANAGER: ["Dashboard", "Schedule", "Visitor", "Reports", "Partners"],
   DIRECTOR: ["Dashboard"],
 };
 
@@ -47,14 +48,21 @@ const data = {
       icon: CalendarCheck2,
     },
     {
+      name: "Reports",
+      url: "/idc-manager/issues",
+      icon: NotebookPen,
+    },
+
+    {
       name: "Visitor",
       url: "/idc-manager/visitors",
       icon: UsersRound,
     },
+
     {
-      name: "Reports",
-      url: "/idc-manager/issues",
-      icon: NotebookPen,
+      name: "Partners",
+      url: "/idc-manager/partners",
+      icon: Store,
     },
     {
       name: "History",

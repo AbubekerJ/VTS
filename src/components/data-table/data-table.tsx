@@ -33,7 +33,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { ChevronDown, File } from "lucide-react";
+import { File, Settings2 } from "lucide-react";
 import { DataTableToolbar } from "./data-table-tool-bar";
 import { DataTablePagination } from "./data-table-pagination";
 
@@ -108,7 +108,7 @@ export function DataTable<T>({
   // // };
 
   return (
-    <div className="lg:w-[95%] lg:mx-auto">
+    <div className="lg:w-[100%] lg:mx-auto">
       <div className="flex items-center justify-between">
         <div className="flex items-center py-4 gap-2">
           {filterColumnId && (
@@ -140,7 +140,7 @@ export function DataTable<T>({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="ml-auto">
-                  Columns <ChevronDown />
+                  View <Settings2 />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">

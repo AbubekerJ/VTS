@@ -5,7 +5,7 @@ import {
   getNotSolvedIssueCount,
   updateIssueStatus,
 } from "@/app/server/issues";
-import { getAllPartners } from "@/app/server/partners";
+import { createPartner, getAllPartners } from "@/app/server/partners";
 import {
   createVisitor,
   getTop5VisitorsWithMostVisits,
@@ -240,6 +240,26 @@ export const useGetTop5Visitors = (selectedDate: DateRange | undefined) => {
     queryFn: async () => {
       const data = await getTop5VisitorsWithMostVisits(selectedDate);
       return data;
+    },
+  });
+};
+
+/// create partner
+
+export const useCreatePartner = () => {
+  return useMutation({
+    mutationFn: async (values: {
+      name: string;
+      latitude: string;
+      longitude: string;
+    }) => {
+      createPartner(values);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["partners"] });
+    },
+    onError: (error) => {
+      console.error("Error updating issue status:", error);
     },
   });
 };

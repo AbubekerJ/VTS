@@ -29,7 +29,7 @@ export function VisitorController() {
   return (
     <div className="relative">
       <div className="absolute top-0 right-4 p-4 ">
-        <Button onClick={handleDialogOpen}>Add Schedule</Button>
+        <Button onClick={handleDialogOpen}>Add Visitor</Button>
       </div>
       <DataTable<Visitor>
         columns={columns}

@@ -18,6 +18,8 @@ export async function getAllPartners() {
       select: {
         id: true,
         name: true,
+        latitude: true,
+        longitude: true,
       },
     });
 
@@ -25,5 +27,37 @@ export async function getAllPartners() {
   } catch (error) {
     console.error("Error fetching partners:", error);
     throw new Error("Failed to fetch partners");
+  }
+}
+
+///create partner
+
+export async function createPartner(values: {
+  name: string;
+  latitude: string;
+  longitude: string;
+}) {
+  const session = await getAuthSession();
+
+  if (!session?.user?.id) {
+    throw new Error(
+      "Unauthorized: User must be logged in to schedule a visit."
+    );
+  }
+  const changedLat = Number(values.latitude);
+  const changedLongitude = Number(values.longitude);
+  try {
+    const response = await prisma.partner.create({
+      data: {
+        name: values.name,
+        latitude: changedLat,
+        longitude: changedLongitude,
+        managerId: session.user.id,
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error("Error creating partners:", error);
+    throw new Error("Failed to create partners");
   }
 }
