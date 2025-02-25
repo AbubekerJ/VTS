@@ -1,5 +1,5 @@
 import React from "react";
-import Dashboard from "./dashboard/dashboard";
+import Dashboard from "../../../components/dashboard/dashboard";
 
 const IdcManger = () => {
   return <div>{<Dashboard />}</div>;

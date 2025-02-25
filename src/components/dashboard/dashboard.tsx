@@ -7,16 +7,19 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { DatePickerWithRange } from "./components/date-range-picker";
-import { TopVisitors } from "./components/top-visitors";
+import { DatePickerWithRange } from "./date-range-picker";
+import { TopVisitors } from "./top-visitors";
 import {
   CalendarCheck,
   CircleCheckBig,
   Footprints,
   OctagonAlert,
 } from "lucide-react";
-import { useGetNotSolvedIssueCount, useGetVisitCounts } from "../query";
-import { IssueChart } from "./components/issue-chart";
+import {
+  useGetNotSolvedIssueCount,
+  useGetVisitCounts,
+} from "../../app/(Users)/idc-manager/query";
+import { IssueChart } from "./issue-chart";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
 

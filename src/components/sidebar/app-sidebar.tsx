@@ -38,7 +38,7 @@ const data = {
   MainItems: [
     {
       name: "Dashboard",
-      url: "/idc-manager/dashboard",
+      url: "/director",
       icon: LayoutDashboard,
     },
     {

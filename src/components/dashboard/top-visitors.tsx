@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { useGetTop5Visitors } from "../../query";
+import { useGetTop5Visitors } from "../../app/(Users)/idc-manager/query";
 import { DateRange } from "react-day-picker";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";

@@ -22,7 +22,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { useGetAllVisitCounts } from "../../query";
+import { useGetAllVisitCounts } from "../../app/(Users)/idc-manager/query";
 import { DateRange } from "react-day-picker";
 
 const chartConfig = {

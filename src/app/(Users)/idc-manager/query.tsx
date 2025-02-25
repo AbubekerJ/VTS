@@ -1,4 +1,4 @@
-import { queryClient } from "@/app/config/all-provider";
+import { queryClient } from "@/config/all-provider";
 import {
   getAllIssues,
   getAllVisitIssuesCount,

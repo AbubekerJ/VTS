@@ -1,6 +1,6 @@
 import { getServerSession, NextAuthOptions } from "next-auth";
 import CredentialProvider from "next-auth/providers/credentials";
-import { authenticateUser } from "../server/login";
+import { authenticateUser } from "../app/server/login";
 
 export const authOptions: NextAuthOptions = {
   providers: [

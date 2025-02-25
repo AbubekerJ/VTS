@@ -1,6 +1,6 @@
 "use server";
 import { prisma } from "@/lib/prisma";
-import { getAuthSession } from "../config/auth-options";
+import { getAuthSession } from "../../config/auth-options";
 
 export async function getAllPartners() {
   const session = await getAuthSession();

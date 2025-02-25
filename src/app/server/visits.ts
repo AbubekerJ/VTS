@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 
-import { getAuthSession } from "../config/auth-options";
+import { getAuthSession } from "../../config/auth-options";
 import { VisitStatus } from "@prisma/client";
 import { getDateFilters } from "@/utils/dateFilter";
 import { DateRange } from "react-day-picker";
@@ -270,35 +270,35 @@ export async function getCountVisits(selectedDateRange: DateRange | undefined) {
         "Unauthorized: User must be logged in to schedule a visit."
       );
     }
-
+    const isDirector = session.user.role === "DIRECTOR";
     const dateFilters = getDateFilters(selectedDateRange);
 
     const [scheduledCount, inProgressCount, completedCount, cancelledCount] =
       await Promise.all([
         prisma.visit.count({
           where: {
-            scheduledById: session.user.id,
+            ...(!isDirector && { scheduledById: session.user.id }),
             status: "SCHEDULED",
             ...(dateFilters && dateFilters),
           },
         }),
         prisma.visit.count({
           where: {
-            scheduledById: session.user.id,
+            ...(!isDirector && { scheduledById: session.user.id }),
             status: "IN_PROGRESS",
             ...(dateFilters && dateFilters),
           },
         }),
         prisma.visit.count({
           where: {
-            scheduledById: session.user.id,
+            ...(!isDirector && { scheduledById: session.user.id }),
             status: "COMPLETED",
             ...(dateFilters && dateFilters),
           },
         }),
         prisma.visit.count({
           where: {
-            scheduledById: session.user.id,
+            ...(!isDirector && { scheduledById: session.user.id }),
             status: "CANCELLED",
             ...(dateFilters && dateFilters),
           },

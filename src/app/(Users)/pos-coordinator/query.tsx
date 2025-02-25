@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { queryClient } from "../../config/all-provider";
+import { queryClient } from "../../../config/all-provider";
 import {
   getCompletedVisits,
   getPosCoordinatorVisits,

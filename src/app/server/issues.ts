@@ -1,6 +1,6 @@
 "use server";
 import { prisma } from "@/lib/prisma";
-import { getAuthSession } from "../config/auth-options";
+import { getAuthSession } from "../../config/auth-options";
 import { DateRange } from "react-day-picker";
 
 // Get all issues
@@ -142,11 +142,12 @@ export async function getNotSolvedIssueCount(
     );
   }
   const dateFilters = getDateFilters(selectedDateRange);
+  const isDirector = session.user.role === "DIRECTOR";
 
   try {
     const visits = await prisma.visit.findMany({
       where: {
-        scheduledById: session.user.id,
+        ...(!isDirector && { scheduledById: session.user.id }),
         ...(dateFilters && dateFilters),
       },
       select: {
@@ -193,16 +194,19 @@ export async function getAllVisitIssuesCount(
   };
   const session = await getAuthSession();
   const dateFilters = getDateFilters(selectedDateRange);
+
   if (!session?.user?.id) {
     throw new Error(
       "Unauthorized: User must be logged in to schedule a visit."
     );
   }
 
+  const isDirector = session.user.role === "DIRECTOR";
+
   try {
     const Visits = await prisma.visit.findMany({
       where: {
-        scheduledById: session.user.id,
+        ...(!isDirector && { scheduledById: session.user.id }),
         VisitIssue: {
           not: Prisma.JsonNull,
         },

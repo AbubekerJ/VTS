@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { getAuthSession } from "../config/auth-options";
+import { getAuthSession } from "../../config/auth-options";
 import bcrypt from "bcryptjs";
 import { DateRange } from "react-day-picker";
 import { getDateFilters } from "@/utils/dateFilter";
@@ -109,10 +109,12 @@ export async function getTop5VisitorsWithMostVisits(
     );
   }
 
+  const isDirector = session.user.role === "DIRECTOR";
+
   try {
     const coordinators = await prisma.user.findMany({
       where: {
-        managerId: session.user.id,
+        ...(!isDirector && { managerId: session.user.id }),
       },
       select: {
         id: true,
