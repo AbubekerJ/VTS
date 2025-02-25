@@ -21,11 +21,12 @@ import {
 import SidebarLogo from "./sidebar-logo";
 import { NavMain } from "./nav-main";
 
-type Role = "POS_COORDINATOR" | "IDC_MANAGER";
+type Role = "POS_COORDINATOR" | "IDC_MANAGER" | "DIRECTOR";
 
 const rolePermissions: Record<Role, string[]> = {
   POS_COORDINATOR: ["Schedule", "History"],
   IDC_MANAGER: ["Dashboard", "Schedule", "Visitor", "Reports"],
+  DIRECTOR: ["Dashboard"],
 };
 
 // Full data

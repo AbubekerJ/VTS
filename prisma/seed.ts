@@ -96,6 +96,7 @@ async function main() {
         latitude: 40.7128,
         longitude: -74.006,
         contact: "partner@tech.com",
+        managerId: manager.id, // Assign managerId
       },
     });
   }
@@ -111,6 +112,7 @@ async function main() {
         latitude: 34.0522,
         longitude: -118.2437,
         contact: "contact@greeninnovations.com",
+        managerId: manager.id, // Assign managerId
       },
     });
   }
@@ -126,6 +128,7 @@ async function main() {
         latitude: 51.5074,
         longitude: -0.1278,
         contact: "contact@oceansys.com",
+        managerId: manager.id, // Assign managerId
       },
     });
   }

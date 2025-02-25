@@ -20,7 +20,8 @@ model User {
   visitsAsCoordinator Visit[] @relation("CoordinatorVisits")
   visitsScheduled     Visit[] @relation("ScheduledVisits")
 
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
+  partners  Partner[] @relation("ManagerPartners")
 }
 
 model Visit {
@@ -51,6 +52,8 @@ model Partner {
   contact   String?
   visits    Visit[]
   createdAt DateTime @default(now())
+  managerId String
+  manager   User     @relation("ManagerPartners", fields: [managerId], references: [id])
 }
 
 model Issue {
