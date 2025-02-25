@@ -1,5 +1,4 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { Visitor } from "../visitor-controller";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
 import {
@@ -11,7 +10,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 
-export const columns: ColumnDef<Visitor>[] = [
+type managerProps = {
+  id: string;
+  name: string;
+  email: string;
+};
+
+export const columns: ColumnDef<managerProps>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => {
@@ -29,16 +34,6 @@ export const columns: ColumnDef<Visitor>[] = [
     header: () => <div className="text-left ">Email</div>,
     cell: ({ row }) => (
       <div className="capitalize ">{row.getValue("email")}</div>
-    ),
-  },
-
-  {
-    accessorKey: "visitsCount",
-    header: () => <div className="text-left ">Visit Count</div>,
-    cell: ({ row }) => (
-      <div className="capitalize bg-green-50 px-3 p-1 w-max text-green-900 rounded ">
-        {row.getValue("visitsCount")} Completed
-      </div>
     ),
   },
 

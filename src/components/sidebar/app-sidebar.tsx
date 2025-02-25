@@ -8,6 +8,7 @@ import {
   FileClock,
   NotebookPen,
   Store,
+  Users,
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 
@@ -27,7 +28,7 @@ type Role = "POS_COORDINATOR" | "IDC_MANAGER" | "DIRECTOR";
 const rolePermissions: Record<Role, string[]> = {
   POS_COORDINATOR: ["Schedule", "History"],
   IDC_MANAGER: ["Dashboard", "Schedule", "Visitor", "Reports", "Partners"],
-  DIRECTOR: ["Dashboard"],
+  DIRECTOR: ["Dashboard", "IDC Managers"],
 };
 
 // Full data
@@ -41,6 +42,11 @@ const data = {
       name: "Dashboard",
       url: "/director",
       icon: LayoutDashboard,
+    },
+    {
+      name: "IDC Managers",
+      url: "/director/managers",
+      icon: Users,
     },
     {
       name: "Schedule",

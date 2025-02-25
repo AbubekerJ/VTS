@@ -2,10 +2,10 @@
 
 import { DataTable } from "@/components/data-table/data-table";
 import React from "react";
-import { columns } from "./partner-table-column";
+import { columns } from "./components/partner-table-column";
 import { getAllPartners } from "@/app/server/partners";
 import { Button } from "@/components/ui/button";
-import AddPartnerForm from "./add-partner-form";
+import AddPartnerForm from "./components/add-partner-form";
 
 const PartnerController = () => {
   const [openDialog, setOpenDialog] = React.useState(false);
