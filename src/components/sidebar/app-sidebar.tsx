@@ -9,6 +9,7 @@ import {
   NotebookPen,
   Store,
   Users,
+  Footprints,
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 
@@ -26,8 +27,16 @@ import { NavMain } from "./nav-main";
 type Role = "POS_COORDINATOR" | "IDC_MANAGER" | "DIRECTOR";
 
 const rolePermissions: Record<Role, string[]> = {
-  POS_COORDINATOR: ["Schedule", "History"],
-  IDC_MANAGER: ["Dashboard", "Schedule", "Visitor", "Reports", "Partners"],
+  POS_COORDINATOR: ["Start Visit", "Visit Histories"],
+  IDC_MANAGER: [
+    "Dashboard",
+    "Schedules",
+    "Store Visitors",
+    "Reports",
+    "Partners",
+    "Start Visit",
+    "Visit Histories",
+  ],
   DIRECTOR: ["Dashboard", "IDC Managers"],
 };
 
@@ -44,23 +53,23 @@ const data = {
       icon: LayoutDashboard,
     },
     {
+      name: "Start Visit",
+      url: "/pos-coordinator",
+      icon: Footprints,
+    },
+    {
       name: "IDC Managers",
       url: "/director/managers",
       icon: Users,
     },
     {
-      name: "Schedule",
+      name: "Schedules",
       url: "/idc-manager/schedules",
       icon: CalendarCheck2,
     },
-    {
-      name: "Reports",
-      url: "/idc-manager/issues",
-      icon: NotebookPen,
-    },
 
     {
-      name: "Visitor",
+      name: "Store Visitors",
       url: "/idc-manager/visitors",
       icon: UsersRound,
     },
@@ -70,10 +79,16 @@ const data = {
       url: "/idc-manager/partners",
       icon: Store,
     },
+
     {
-      name: "History",
+      name: "Visit Histories",
       url: "/pos-coordinator/pos-coordinator-history",
       icon: FileClock,
+    },
+    {
+      name: "Reports",
+      url: "/idc-manager/issues",
+      icon: NotebookPen,
     },
   ],
 };

@@ -95,14 +95,9 @@ export default function Dashboard() {
                 </Card>
               </div>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-                <Card className="col-span-4">
-                  <CardHeader>
-                    <CardTitle>Issues</CardTitle>
-                  </CardHeader>
-                  <CardContent className="pl-2">
-                    <IssueChart selectedDate={selectedDate} />
-                  </CardContent>
-                </Card>
+                {/* issue bar chart */}
+                <IssueChart selectedDate={selectedDate} />
+                {/* top visitor */}
                 <Card className="col-span-3">
                   <CardHeader>
                     <CardTitle>Top visitors</CardTitle>

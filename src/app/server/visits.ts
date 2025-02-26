@@ -168,6 +168,9 @@ export async function getScheduledVisit() {
           in: [VisitStatus.SCHEDULED, VisitStatus.IN_PROGRESS],
         },
       },
+      orderBy: {
+        createdAt: "desc",
+      },
       select: {
         id: true,
         visitDate: true,

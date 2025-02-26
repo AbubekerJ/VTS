@@ -91,7 +91,7 @@ export const columns: ColumnDef<ScheduleType>[] = [
             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
               <RescheduleAction scheduleId={schedule.id} />
             </DropdownMenuItem>
-            <DropdownMenuItem
+            {/* <DropdownMenuItem
               onClick={() =>
                 console.log(
                   "schedule id.................................",
@@ -100,7 +100,7 @@ export const columns: ColumnDef<ScheduleType>[] = [
               }
             >
               <p className="capitalize text-red-500 cursor-pointer">Delete</p>
-            </DropdownMenuItem>
+            </DropdownMenuItem> */}
           </DropdownMenuContent>
         </DropdownMenu>
       );

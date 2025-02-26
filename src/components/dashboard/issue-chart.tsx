@@ -46,7 +46,7 @@ export function IssueChart({
   console.log("Fetched Issues Count:", allIssuesCount);
   const chartData = allIssuesCount ?? [];
   return (
-    <Card>
+    <Card className="col-span-4">
       <CardHeader>
         <CardTitle>Visit issues overview</CardTitle>
       </CardHeader>

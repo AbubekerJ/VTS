@@ -51,7 +51,9 @@ export default function RescheduleForm({
         {
           onSuccess: () => {
             toast({
-              title: "Reschedule success",
+              variant: "default",
+              title: "Success",
+              description: "Reschedule success",
             });
           },
           onError: () => {

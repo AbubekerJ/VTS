@@ -30,16 +30,21 @@ export function ScheduleController() {
 
   return (
     <div className="relative">
-      <div className="absolute top-0 right-4 p-4 ">
-        <Button onClick={handleDialogOpen}>Add Schedule</Button>
+      <div className="flex flex-col md:flex-row justify-between items-center p-4   ">
+        <div className="w-full md:w-auto mb-4 md:mb-0 sm:absolute top-0 right-4 sm:p-4">
+          <Button onClick={handleDialogOpen}>Add Schedule</Button>
+        </div>
+        <div className="w-full">
+          <div className="data-table-container">
+            <DataTable<ScheduleType>
+              dataProvider={getScheduledVisit}
+              columns={columns}
+              filterColumnId="location"
+              queryKey="scheduledVisit"
+            />
+          </div>
+        </div>
       </div>
-
-      <DataTable<ScheduleType>
-        dataProvider={getScheduledVisit}
-        columns={columns}
-        filterColumnId="location"
-        queryKey="scheduledVisit"
-      />
 
       <AddSchedule open={openDialog} onClose={handleDialogClose} />
     </div>

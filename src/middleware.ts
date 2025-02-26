@@ -22,11 +22,20 @@ export async function middleware(req: NextRequest) {
     | "IDC_MANAGER"
     | "POS_COORDINATOR";
 
+  // Redirect logged-in users away from the login page
   if (token && req.nextUrl.pathname.startsWith("/login")) {
     return NextResponse.redirect(new URL(rolePaths[userRole] || "/", req.url));
   }
 
-  // Enforce role-based access control
+  // Allow IDC_MANAGER to access POS_COORDINATOR page
+  if (
+    userRole === "IDC_MANAGER" &&
+    req.nextUrl.pathname.startsWith(rolePaths["POS_COORDINATOR"])
+  ) {
+    return NextResponse.next(); // Allow access
+  }
+
+  // Enforce role-based access control for other roles
   if (
     token &&
     rolePaths[userRole] &&

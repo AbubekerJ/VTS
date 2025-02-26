@@ -28,15 +28,22 @@ export function VisitorController() {
 
   return (
     <div className="relative">
-      <div className="absolute top-0 right-4 p-4 ">
-        <Button onClick={handleDialogOpen}>Add Visitor</Button>
+      <div className="flex flex-col md:flex-row justify-between items-center p-4   ">
+        <div className="w-full md:w-auto mb-4 md:mb-0 sm:absolute top-0 right-4 sm:p-4">
+          <Button onClick={handleDialogOpen}>Add Visitor</Button>
+        </div>
+        <div className="w-full">
+          <div className="data-table-container">
+            <DataTable<Visitor>
+              columns={columns}
+              dataProvider={getVisitorUnderThisManager}
+              queryKey="visitors"
+              filterColumnId="name"
+            />
+          </div>
+        </div>
       </div>
-      <DataTable<Visitor>
-        columns={columns}
-        dataProvider={getVisitorUnderThisManager}
-        queryKey="visitors"
-        filterColumnId="name"
-      />
+
       <AddVisitorForm open={openDialog} onClose={handleDialogClose} />
     </div>
   );

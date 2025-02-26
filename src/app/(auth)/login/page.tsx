@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 
 const schema = z.object({
-  email: z.string().email({ message: "Invalid email!" }),
+  email: z.string().min(4),
   password: z
     .string()
     .min(8, { message: "Password must be at least 8 characters" }),
@@ -47,6 +47,7 @@ const UserAuthForm = () => {
       });
 
       if (response?.error) {
+        console.log("error message ................................", error);
         setError("Email or Password is incorrect");
       } else {
         reset();
@@ -88,8 +89,12 @@ const UserAuthForm = () => {
           onSubmit={handleSubmit(onSubmitHandler)}
         >
           <div>
-            <Label className="text-gray-400">Email</Label>
-            <Input {...register("email")} placeholder="Email" className="p-5" />
+            <Label className="text-gray-400">User Name</Label>
+            <Input
+              {...register("email")}
+              placeholder="example abebe.kebede"
+              className="p-5"
+            />
             {errors?.email && (
               <p className="text-red-500 text-sm mt-1">
                 {errors?.email.message}

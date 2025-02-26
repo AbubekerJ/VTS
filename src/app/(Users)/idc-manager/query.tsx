@@ -9,7 +9,7 @@ import { createPartner, getAllPartners } from "@/app/server/partners";
 import {
   createVisitor,
   getTop5VisitorsWithMostVisits,
-  getVisitorUnderThisManager,
+  getVisitorForTheSelect,
 } from "@/app/server/pos-coordinators";
 import {
   getCountVisits,
@@ -18,20 +18,21 @@ import {
 } from "@/app/server/visits";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { DateRange } from "react-day-picker";
+// import { useToast } from "@/hooks/use-toast";
 
-export const useGetAllVisitorUnderThisManager = () => {
-  return useQuery({
-    queryKey: ["visitors"],
-    queryFn: async () => {
-      const data = await getVisitorUnderThisManager();
-      console.log(
-        "all visitor data in query file................................",
-        data
-      );
-      return data;
-    },
-  });
-};
+// export const useGetAllVisitorUnderThisManager = () => {
+//   return useQuery({
+//     queryKey: ["visitors"],
+//     queryFn: async () => {
+//       const data = await getVisitorUnderThisManager();
+//       console.log(
+//         "all visitor data in query file................................",
+//         data
+//       );
+//       return data;
+//     },
+//   });
+// };
 
 export const useGetAllIssues = () => {
   return useQuery({
@@ -150,18 +151,14 @@ export const useScheduleVisit = () => {
 ///create visitor
 
 export const useCreateVisitor = () => {
-  return useMutation({
-    mutationFn: async ({
-      name,
-      email,
-      password,
-    }: {
-      name: string;
-      email: string;
-      password: string;
-    }) => {
-      const data = await createVisitor({ name, email, password });
-      return data;
+  return useMutation<
+    { success: boolean; message: string },
+    Error,
+    { name: string; email: string }
+  >({
+    mutationFn: async ({ name, email }) => {
+      const response = await createVisitor({ name, email });
+      return response;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["visitors"] });
@@ -171,7 +168,6 @@ export const useCreateVisitor = () => {
     },
   });
 };
-
 ///update issue status
 
 export const useUpdateIssuesStatus = () => {
@@ -260,6 +256,17 @@ export const useCreatePartner = () => {
     },
     onError: (error) => {
       console.error("Error updating issue status:", error);
+    },
+  });
+};
+
+//get visitors for the select
+export const useGetVisitorForTheSelect = () => {
+  return useQuery({
+    queryKey: ["visitorForSelect"],
+    queryFn: async () => {
+      const data = await getVisitorForTheSelect();
+      return data;
     },
   });
 };

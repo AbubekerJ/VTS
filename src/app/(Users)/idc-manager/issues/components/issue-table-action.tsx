@@ -38,7 +38,9 @@ const IssueTableAction = ({ issue }: { issue: Issue }) => {
       {
         onSuccess: () => {
           toast({
-            title: `Issue status updated to ${status}`,
+            variant: "default",
+            title: "Success",
+            description: `Issue status updated to ${status}`,
           });
         },
       }

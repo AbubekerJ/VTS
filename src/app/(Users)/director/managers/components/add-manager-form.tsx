@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+// import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Eye, EyeOff } from "lucide-react";
+// import { Eye, EyeOff } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -25,7 +25,7 @@ import { useCreateIdcManager } from "../query";
 
 const formSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(6),
+  // password: z.string().min(6),
   name: z.string().min(3),
 });
 
@@ -41,33 +41,41 @@ export default function AddManagerForm({
     defaultValues: {
       name: "",
       email: "",
-      password: "",
+      // password: "",
     },
   });
 
-  const [showPassword, setShowPassword] = useState(false);
+  // const [showPassword, setShowPassword] = useState(false);
   const { mutate: createManager } = useCreateIdcManager();
   const { toast } = useToast();
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      createManager(values, {
-        onSuccess: () => {
+    createManager(values, {
+      onSuccess: (response) => {
+        if (response.success) {
           toast({
-            description: "Manager Added",
+            variant: "default",
+            title: "Success",
+            description: response.message,
           });
           onClose();
-        },
-        onError: (error) => {
-          console.log("error", error);
-        },
-      });
-    } catch (error) {
-      console.error("Form submission error", error);
-      toast({
-        title: "Something went wrong",
-      });
-    }
+        } else {
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: response.message,
+          });
+        }
+      },
+      onError: (error) => {
+        console.error("Error creating visitor:", error);
+        toast({
+          variant: "destructive",
+          title: "Something went wrong",
+          description: "An unexpected error occurred. Please try again.",
+        });
+      },
+    });
   }
 
   return (
@@ -109,7 +117,7 @@ export default function AddManagerForm({
               )}
             />
 
-            <FormField
+            {/* <FormField
               control={form.control}
               name="password"
               render={({ field }) => (
@@ -142,7 +150,7 @@ export default function AddManagerForm({
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
 
             <Button type="submit">Submit</Button>
           </form>

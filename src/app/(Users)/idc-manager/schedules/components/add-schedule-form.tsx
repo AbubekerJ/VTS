@@ -33,7 +33,7 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import { DatetimePicker } from "@/components/ui/datetime-picker";
 import {
   useGetAllPartners,
-  useGetAllVisitorUnderThisManager,
+  useGetVisitorForTheSelect,
   useScheduleVisit,
 } from "../../query";
 import { useToast } from "@/hooks/use-toast";
@@ -51,7 +51,7 @@ export default function AddSchedule({
   open: boolean;
   onClose: () => void;
 }) {
-  const { data: visitors } = useGetAllVisitorUnderThisManager();
+  const { data: visitors } = useGetVisitorForTheSelect();
   const { data: partners } = useGetAllPartners();
   const { mutate: addSchedule } = useScheduleVisit();
   const { toast } = useToast();
@@ -74,9 +74,12 @@ export default function AddSchedule({
         {
           onSuccess: () => {
             toast({
-              title: "Schedule Added",
+              variant: "default",
+              title: "Success",
+              description: "Schedule Added",
             });
             onClose();
+            form.reset();
             console.log("schedule success");
           },
           onError: (error) => {
@@ -87,7 +90,8 @@ export default function AddSchedule({
     } catch (error) {
       console.error("Form submission error", error);
       toast({
-        title: "Scheduled Added failed ",
+        variant: "destructive",
+        title: "Error",
         description: "Scheduled Added failed ",
       });
     }
@@ -100,16 +104,16 @@ export default function AddSchedule({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-8 max-w-3xl mx-auto py-10"
+            className="space-y-8 max-w-3xl mx-auto py-10 "
           >
             <div className="grid grid-cols-12 gap-4">
-              <div className="col-span-6">
+              <div className="col-span-12 md:col-span-6">
                 <FormField
                   control={form.control}
                   name="partner"
                   render={({ field }) => (
-                    <FormItem className="flex flex-col">
-                      <FormLabel>Partner</FormLabel>
+                    <FormItem className="flex flex-col ">
+                      <FormLabel>Partners</FormLabel>
                       <Popover>
                         <PopoverTrigger asChild>
                           <FormControl>
@@ -117,13 +121,13 @@ export default function AddSchedule({
                               variant="outline"
                               role="combobox"
                               className={cn(
-                                "w-[200px] justify-between",
+                                "w-full md:w-[200px] justify-between",
                                 !field.value && "text-muted-foreground"
                               )}
                             >
                               {field.value
                                 ? partners?.find(
-                                    (language) => language.id === field.value
+                                    (partner) => partner.id === field.value
                                   )?.name
                                 : "Select partner"}
                               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -132,9 +136,9 @@ export default function AddSchedule({
                         </PopoverTrigger>
                         <PopoverContent className="w-[200px] p-0">
                           <Command>
-                            <CommandInput placeholder="Search language..." />
+                            <CommandInput placeholder="Search partner..." />
                             <CommandList>
-                              <CommandEmpty>No language found.</CommandEmpty>
+                              <CommandEmpty>No partner found.</CommandEmpty>
                               <CommandGroup>
                                 {partners?.map((partner) => (
                                   <CommandItem
@@ -161,7 +165,7 @@ export default function AddSchedule({
                         </PopoverContent>
                       </Popover>
                       <FormDescription>
-                        This is the language that will be used in the dashboard.
+                        Select partner Name you want to visit{" "}
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -169,13 +173,13 @@ export default function AddSchedule({
                 />
               </div>
 
-              <div className="col-span-6">
+              <div className="col-span-12 md:col-span-6">
                 <FormField
                   control={form.control}
                   name="visitor"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
-                      <FormLabel>visitor</FormLabel>
+                      <FormLabel>Visitors</FormLabel>
                       <Popover>
                         <PopoverTrigger asChild>
                           <FormControl>
@@ -183,7 +187,7 @@ export default function AddSchedule({
                               variant="outline"
                               role="combobox"
                               className={cn(
-                                "w-[200px] justify-between",
+                                "w-full md:w-[200px] justify-between",
                                 !field.value && "text-muted-foreground"
                               )}
                             >
@@ -198,9 +202,9 @@ export default function AddSchedule({
                         </PopoverTrigger>
                         <PopoverContent className="w-[200px] p-0">
                           <Command>
-                            <CommandInput placeholder="Search language..." />
+                            <CommandInput placeholder="Search visitor..." />
                             <CommandList>
-                              <CommandEmpty>No language found.</CommandEmpty>
+                              <CommandEmpty>No visitor found.</CommandEmpty>
                               <CommandGroup>
                                 {visitors?.map((visitor) => (
                                   <CommandItem
@@ -227,7 +231,8 @@ export default function AddSchedule({
                         </PopoverContent>
                       </Popover>
                       <FormDescription>
-                        This is the language that will be used in the dashboard.
+                        Select the visitor for this schedule (you can assign
+                        yourself)
                       </FormDescription>
                       <FormMessage />
                     </FormItem>

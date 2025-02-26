@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { getAuthSession } from "../../config/auth-options";
-import bcrypt from "bcryptjs";
+// import bcrypt from "bcryptjs";
 import { DateRange } from "react-day-picker";
 import { getDateFilters } from "@/utils/dateFilter";
 
@@ -62,36 +62,112 @@ export async function getVisitorUnderThisManager() {
   }
 }
 
+//get visitor for the select
+export async function getVisitorForTheSelect() {
+  const session = await getAuthSession();
+
+  const UserId = session?.user.id;
+  try {
+    if (!UserId) {
+      throw new Error("User is not authenticated");
+    }
+
+    // Fetch the IDC manager
+    const manager = await prisma.user.findUnique({
+      where: {
+        id: UserId,
+        role: "IDC_MANAGER",
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
+    });
+
+    if (!manager) {
+      throw new Error("IDC Manager not found");
+    }
+
+    // Get the count of visits for each coordinator under this manager
+    const coordinators = await prisma.user.findMany({
+      where: {
+        role: "POS_COORDINATOR",
+        managerId: manager.id,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
+    });
+
+    // Format the manager and coordinators into a single array
+    const formattedResponse = [
+      {
+        id: manager.id,
+        name: manager.name,
+        email: manager.email,
+      },
+      ...coordinators.map((user) => ({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      })),
+    ];
+
+    return formattedResponse;
+  } catch (error) {
+    console.error("Error fetching visitors under this manager:", error);
+    throw error;
+  }
+}
+
 //////////////////// create visitor
 export async function createVisitor(values: {
   name: string;
   email: string;
-  password: string;
+  // password: string;
 }) {
   const session = await getAuthSession();
 
   const managerId = session?.user.id;
-  const Password = values.password;
+  // const Password = values.password;
 
-  const hashedPassword = await bcrypt.hash(Password, 10);
+  // const hashedPassword = await bcrypt.hash(Password, 10);
   try {
     if (!managerId) {
       throw new Error("User is not authenticated");
     }
 
-    const response = await prisma.user.create({
+    const existingUser = await prisma.user.findUnique({
+      where: {
+        email: values.email,
+      },
+    });
+
+    if (existingUser) {
+      console.log("fail response from backend ...........................", {
+        success: false,
+        message: "User with this email already exists",
+      });
+
+      return { success: false, message: "User with this email already exists" };
+    }
+
+    await prisma.user.create({
       data: {
         ...values,
-        password: hashedPassword,
+        // password: hashedPassword,
         role: "POS_COORDINATOR",
         managerId: managerId,
       },
     });
 
-    return response;
+    return { success: true, message: "user created successfully" };
   } catch (error) {
     console.error("Error creating visitor:", error);
-    throw new Error("Failed to create visitor");
+    return { success: false, message: "Failed to create visitor" };
   }
 }
 

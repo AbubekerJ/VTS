@@ -91,6 +91,8 @@ export default function LogForm({
         {
           onSuccess: () => {
             toast({
+              variant: "default",
+              title: "Success",
               description: "Visit Report Submitted",
             });
             const updatedCheckIns = storedCheckIns.filter(
@@ -141,8 +143,7 @@ export default function LogForm({
                     />
                   </FormControl>
                   <FormDescription>
-                    Notes on findings or observations made during the visit. Any
-                    issues encountered at the location
+                    Notes on findings or observations made during the visit.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -167,7 +168,8 @@ export default function LogForm({
                     />
                   </FormControl>
                   <FormDescription>
-                    Choose the issues you are interested in.
+                    Please select any issues you have observed. If there are
+                    none, feel free to skip this.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

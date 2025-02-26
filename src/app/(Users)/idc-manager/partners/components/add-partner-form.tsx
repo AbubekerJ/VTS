@@ -51,7 +51,9 @@ export default function AddPartnerForm({
       createVisitor(values, {
         onSuccess: () => {
           toast({
-            title: "Partner Added",
+            variant: "default",
+            title: "Success",
+            description: "Partner Added",
           });
           onClose();
         },
@@ -62,6 +64,8 @@ export default function AddPartnerForm({
     } catch (error) {
       console.error("Form submission error", error);
       toast({
+        variant: "destructive",
+        title: "Error",
         description: "Something went wrong",
       });
     }
@@ -100,7 +104,9 @@ export default function AddPartnerForm({
                   <FormControl>
                     <Input placeholder="Latitude" type="text" {...field} />
                   </FormControl>
-                  <FormDescription>latitude of the partner</FormDescription>
+                  <FormDescription>
+                    latitude of the partner eg: (9.0089023)
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -114,7 +120,9 @@ export default function AddPartnerForm({
                   <FormControl>
                     <Input placeholder="Longitude" type="text" {...field} />
                   </FormControl>
-                  <FormDescription>longitude of the partner</FormDescription>
+                  <FormDescription>
+                    longitude of the partner eg: (38.7466258)
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

@@ -3,19 +3,20 @@ import { queryClient } from "@/config/all-provider";
 import { useMutation } from "@tanstack/react-query";
 
 export const useCreateIdcManager = () => {
-  return useMutation({
-    mutationFn: async (values: {
-      name: string;
-      email: string;
-      password: string;
-    }) => {
-      createManager(values);
+  return useMutation<
+    { success: boolean; message: string },
+    Error,
+    { name: string; email: string }
+  >({
+    mutationFn: async ({ name, email }) => {
+      const response = await createManager({ name, email });
+      return response;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["managers"] });
+      queryClient.invalidateQueries({ queryKey: ["visitors"] });
     },
-    onError: () => {
-      console.log("error creating manager");
+    onError: (error) => {
+      console.error("Error creating visitor:", error);
     },
   });
 };
