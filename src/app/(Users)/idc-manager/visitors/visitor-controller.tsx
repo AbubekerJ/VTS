@@ -19,11 +19,11 @@ export function VisitorController() {
   const [openDialog, setOpenDialog] = React.useState(false);
 
   const handleDialogOpen = () => {
-    setOpenDialog(true); // Open dialog
+    setOpenDialog(true);
   };
 
   const handleDialogClose = () => {
-    setOpenDialog(false); // Close dialog
+    setOpenDialog(false);
   };
 
   return (

@@ -20,8 +20,8 @@ import { Input } from "@/components/ui/input";
 
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { DialogTitle } from "@radix-ui/react-dialog";
-import { useCreateVisitor } from "../../query";
 import { useToast } from "@/hooks/use-toast";
+import { useCreateIdcManager } from "../query";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -29,7 +29,7 @@ const formSchema = z.object({
   name: z.string().min(3),
 });
 
-export default function AddVisitorForm({
+export default function AddManagerForm({
   open,
   onClose,
 }: {
@@ -46,15 +46,15 @@ export default function AddVisitorForm({
   });
 
   const [showPassword, setShowPassword] = useState(false);
-  const { mutate: createVisitor } = useCreateVisitor();
+  const { mutate: createManager } = useCreateIdcManager();
   const { toast } = useToast();
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      createVisitor(values, {
+      createManager(values, {
         onSuccess: () => {
           toast({
-            description: "Visitor Added",
+            description: "Manager Added",
           });
           onClose();
         },
@@ -88,7 +88,7 @@ export default function AddVisitorForm({
                   <FormControl>
                     <Input placeholder="Name" type="text" {...field} />
                   </FormControl>
-                  <FormDescription>Name of the visitor</FormDescription>
+                  <FormDescription>Name of the manager</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -103,7 +103,7 @@ export default function AddVisitorForm({
                   <FormControl>
                     <Input placeholder="Email" type="email" {...field} />
                   </FormControl>
-                  <FormDescription>Email of the visitor</FormDescription>
+                  <FormDescription>Email of the manager</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
